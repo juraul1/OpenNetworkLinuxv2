@@ -608,10 +608,10 @@ onlp_i2c_mux_mapping(int port_number, int reset)
     cpu_mux.name = "CPU MUX";
     cpu_mux.bus = 0;
     cpu_mux.devaddr = 0x70; //CPU MUX address from hardware specification
-    cpu_mux.driver = onlp_i2c_mux_driver_pca9548; //Driver for BF6064X switch
+    cpu_mux.driver = &onlp_i2c_mux_driver_pca9548; //Driver for BF6064X switch
     mb_mux.name = "MB MUX";
     mb_mux.bus = 0;
-    mb_mux.driver = onlp_i2c_mux_driver_pca9548; //For BF6064X switch
+    mb_mux.driver = &onlp_i2c_mux_driver_pca9548; //For BF6064X switch
 
     if (port_number > 0 && port_number <= 32) {
         channel_cpu = 2;
@@ -624,12 +624,12 @@ onlp_i2c_mux_mapping(int port_number, int reset)
     // Select or deselect CPU MUX
     int rv;
     if (reset == 0) {
-        rv = onlp_i2c_mux_select(cpu_mux, channel_cpu);
+        rv = onlp_i2c_mux_select(&cpu_mux, channel_cpu);
         if(rv < 0) {
             return rv;
         }
     } else { // reset = 1
-        rv = onlp_i2c_mux_deselect(cpu_mux.devaddr);
+        rv = onlp_i2c_mux_deselect(&cpu_mux);
         if(rv < 0) {
             return rv;
         }
@@ -896,9 +896,9 @@ onlp_i2c_mux_mapping(int port_number, int reset)
 
     // Select or deselect MB MUX
     if (reset == 0) {
-        return onlp_i2c_mux_select(mb_mux, channel_mb);
+        return onlp_i2c_mux_select(&mb_mux, channel_mb);
     } else {
-        return onlp_i2c_mux_deselect(mb_mux.devaddr);
+        return onlp_i2c_mux_deselect(&mb_mux);
     }
 }
 
