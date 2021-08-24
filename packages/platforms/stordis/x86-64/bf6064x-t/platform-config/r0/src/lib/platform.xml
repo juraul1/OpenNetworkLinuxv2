@@ -1,0 +1,1392 @@
+
+<root>
+<!--
+    Port config : Determine port number and the type of port on platform (copper/sfp)
+-->
+    <port_config port_num="64">
+        <port instance="1" type="sfp"/>
+        <port instance="2" type="sfp"/>
+        <port instance="3" type="sfp"/>
+        <port instance="4" type="sfp"/>
+        <port instance="5" type="sfp"/>
+        <port instance="6" type="sfp"/>
+        <port instance="7" type="sfp"/>
+        <port instance="8" type="sfp"/>
+        <port instance="9" type="sfp"/>
+        <port instance="10" type="sfp"/>
+        <port instance="11" type="sfp"/>
+        <port instance="12" type="sfp"/>
+        <port instance="13" type="sfp"/>
+        <port instance="14" type="sfp"/>
+        <port instance="15" type="sfp"/>
+        <port instance="16" type="sfp"/>
+        <port instance="17" type="sfp"/>
+        <port instance="18" type="sfp"/>
+        <port instance="19" type="sfp"/>
+        <port instance="20" type="sfp"/>
+        <port instance="21" type="sfp"/>
+        <port instance="22" type="sfp"/>
+        <port instance="23" type="sfp"/>
+        <port instance="24" type="sfp"/>
+        <port instance="25" type="sfp"/>
+        <port instance="26" type="sfp"/>
+        <port instance="27" type="sfp"/>
+        <port instance="28" type="sfp"/>
+        <port instance="29" type="sfp"/>
+        <port instance="30" type="sfp"/>
+        <port instance="31" type="sfp"/>
+        <port instance="32" type="sfp"/>
+        <port instance="33" type="sfp"/>
+        <port instance="34" type="sfp"/>
+        <port instance="35" type="sfp"/>
+        <port instance="36" type="sfp"/>
+        <port instance="37" type="sfp"/>
+        <port instance="38" type="sfp"/>
+        <port instance="39" type="sfp"/>
+        <port instance="40" type="sfp"/>
+        <port instance="41" type="sfp"/>
+        <port instance="42" type="sfp"/>
+        <port instance="43" type="sfp"/>
+        <port instance="44" type="sfp"/>
+        <port instance="45" type="sfp"/>
+        <port instance="46" type="sfp"/>
+        <port instance="47" type="sfp"/>
+        <port instance="48" type="sfp"/>
+        <port instance="49" type="sfp"/>
+        <port instance="50" type="sfp"/>
+        <port instance="51" type="sfp"/>
+        <port instance="52" type="sfp"/>
+        <port instance="53" type="sfp"/>
+        <port instance="54" type="sfp"/>
+        <port instance="55" type="sfp"/>
+        <port instance="56" type="sfp"/>
+        <port instance="57" type="sfp"/>
+        <port instance="58" type="sfp"/>
+        <port instance="59" type="sfp"/>
+        <port instance="60" type="sfp"/>
+        <port instance="61" type="sfp"/>
+        <port instance="62" type="sfp"/>
+        <port instance="63" type="sfp"/>
+        <port instance="64" type="sfp"/>
+    </port_config>
+
+    <VIRTUAL>
+        <vdevice type="virtual" name="led">
+            <resource type="sysled" res_name="sysled-fan">
+                <reference res_name="sysled-fan-off"/>
+                <reference res_name="sysled-fan-green"/>
+                <reference res_name="sysled-fan-orange"/>
+            </resource>
+            <resource type="sysled" res_name="sysled-system">
+                <reference res_name="sysled-system-off"/>
+                <reference res_name="sysled-system-green"/>
+                <reference res_name="sysled-system-green-blinking"/>
+                <reference res_name="sysled-system-orange"/>
+                <reference res_name="sysled-system-orange-blinking"/>
+            </resource>
+            <resource type="sysled" res_name="sysled-power-0">
+                <reference res_name="sysled-power-0-off"/>
+                <reference res_name="sysled-power-0-green"/>
+                <reference res_name="sysled-power-0-orange"/>
+            </resource>
+            <resource type="sysled" res_name="sysled-power-1">
+                <reference res_name="sysled-power-1-off"/>
+                <reference res_name="sysled-power-1-green"/>
+                <reference res_name="sysled-power-1-orange"/>
+            </resource>
+        </vdevice>
+    </VIRTUAL>
+
+    <I2C bus="0">
+<!--
+    I2C MUX :
+-->
+        <device name="pca9548-0" slave="0x70">
+            <function type="mux" drv="MUX">
+                <resource type="internal" val="0x01" res_name="cpu-mux0-0"/>
+                <resource type="internal" val="0x02" res_name="cpu-mux0-1"/>
+                <resource type="internal" val="0x04" res_name="cpu-mux0-2"/>
+                <resource type="internal" val="0x08" res_name="cpu-mux0-3"/>
+                <resource type="internal" val="0x10" res_name="cpu-mux0-4"/>
+                <resource type="internal" val="0x20" res_name="cpu-mux0-5"/>
+                <resource type="internal" val="0x40" res_name="cpu-mux0-6"/>
+                <resource type="internal" val="0x80" res_name="cpu-mux0-7"/>
+                <resource type="internal" val="0x00" res_name="cpu-mux0-post"/>
+            </function>
+        </device>
+        <device name="zqsfp0" slave="0x74">
+            <pre res_name="cpu-mux0-2"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="mux" drv="MUX">
+                <resource type="internal" val="0x01" res_name="zqsfp0-p1"/>
+                <resource type="internal" val="0x02" res_name="zqsfp0-p2"/>
+                <resource type="internal" val="0x04" res_name="zqsfp0-p3"/>
+                <resource type="internal" val="0x08" res_name="zqsfp0-p4"/>
+                <resource type="internal" val="0x10" res_name="zqsfp0-p5"/>
+                <resource type="internal" val="0x20" res_name="zqsfp0-p6"/>
+                <resource type="internal" val="0x40" res_name="zqsfp0-p7"/>
+                <resource type="internal" val="0x80" res_name="zqsfp0-p8"/>
+                <resource type="internal" val="0x00" res_name="zqsfp0-post"/>
+            </function>
+        </device>
+        <device name="zqsfp1" slave="0x75">
+            <pre res_name="cpu-mux0-2"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="mux" drv="MUX">
+                <resource type="internal" val="0x01" res_name="zqsfp1-p14"/>
+                <resource type="internal" val="0x02" res_name="zqsfp1-p13"/>
+                <resource type="internal" val="0x04" res_name="zqsfp1-p16"/>
+                <resource type="internal" val="0x08" res_name="zqsfp1-p15"/>
+                <resource type="internal" val="0x10" res_name="zqsfp1-p10"/>
+                <resource type="internal" val="0x20" res_name="zqsfp1-p9"/>
+                <resource type="internal" val="0x40" res_name="zqsfp1-p12"/>
+                <resource type="internal" val="0x80" res_name="zqsfp1-p11"/>
+                <resource type="internal" val="0x00" res_name="zqsfp1-post"/>
+            </function>
+        </device>
+        <device name="zqsfp2" slave="0x76">
+            <pre res_name="cpu-mux0-2"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="mux" drv="MUX">
+                <resource type="internal" val="0x01" res_name="zqsfp2-p17"/>
+                <resource type="internal" val="0x02" res_name="zqsfp2-p18"/>
+                <resource type="internal" val="0x04" res_name="zqsfp2-p26"/>
+                <resource type="internal" val="0x08" res_name="zqsfp2-p25"/>
+                <resource type="internal" val="0x10" res_name="zqsfp2-p22"/>
+                <resource type="internal" val="0x20" res_name="zqsfp2-p21"/>
+                <resource type="internal" val="0x40" res_name="zqsfp2-p24"/>
+                <resource type="internal" val="0x80" res_name="zqsfp2-p23"/>
+                <resource type="internal" val="0x00" res_name="zqsfp2-post"/>
+            </function>
+        </device>
+        <device name="zqsfp3" slave="0x77">
+            <pre res_name="cpu-mux0-2"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="mux" drv="MUX">
+                <resource type="internal" val="0x01" res_name="zqsfp3-p29"/>
+                <resource type="internal" val="0x02" res_name="zqsfp3-p30"/>
+                <resource type="internal" val="0x04" res_name="zqsfp3-p27"/>
+                <resource type="internal" val="0x08" res_name="zqsfp3-p28"/>
+                <resource type="internal" val="0x10" res_name="zqsfp3-p32"/>
+                <resource type="internal" val="0x20" res_name="zqsfp3-p31"/>
+                <resource type="internal" val="0x40" res_name="zqsfp3-p19"/>
+                <resource type="internal" val="0x80" res_name="zqsfp3-p20"/>
+                <resource type="internal" val="0x00" res_name="zqsfp3-post"/>
+            </function>
+        </device>
+        <device name="zqsfp4" slave="0x74">
+            <pre res_name="cpu-mux0-6"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="mux" drv="MUX">
+                <resource type="internal" val="0x01" res_name="zqsfp4-p33"/>
+                <resource type="internal" val="0x02" res_name="zqsfp4-p34"/>
+                <resource type="internal" val="0x04" res_name="zqsfp4-p35"/>
+                <resource type="internal" val="0x08" res_name="zqsfp4-p36"/>
+                <resource type="internal" val="0x10" res_name="zqsfp4-p37"/>
+                <resource type="internal" val="0x20" res_name="zqsfp4-p38"/>
+                <resource type="internal" val="0x40" res_name="zqsfp4-p39"/>
+                <resource type="internal" val="0x80" res_name="zqsfp4-p40"/>
+                <resource type="internal" val="0x00" res_name="zqsfp4-post"/>
+            </function>
+        </device>
+        <device name="zqsfp5" slave="0x75">
+            <pre res_name="cpu-mux0-6"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="mux" drv="MUX">
+                <resource type="internal" val="0x01" res_name="zqsfp5-p47"/>
+                <resource type="internal" val="0x02" res_name="zqsfp5-p48"/>
+                <resource type="internal" val="0x04" res_name="zqsfp5-p41"/>
+                <resource type="internal" val="0x08" res_name="zqsfp5-p42"/>
+                <resource type="internal" val="0x10" res_name="zqsfp5-p43"/>
+                <resource type="internal" val="0x20" res_name="zqsfp5-p44"/>
+                <resource type="internal" val="0x40" res_name="zqsfp5-p45"/>
+                <resource type="internal" val="0x80" res_name="zqsfp5-p46"/>
+                <resource type="internal" val="0x00" res_name="zqsfp5-post"/>
+            </function>
+        </device>
+        <device name="zqsfp6" slave="0x76">
+            <pre res_name="cpu-mux0-6"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="mux" drv="MUX">
+                <resource type="internal" val="0x01" res_name="zqsfp6-p55"/>
+                <resource type="internal" val="0x02" res_name="zqsfp6-p56"/>
+                <resource type="internal" val="0x04" res_name="zqsfp6-p53"/>
+                <resource type="internal" val="0x08" res_name="zqsfp6-p54"/>
+                <resource type="internal" val="0x10" res_name="zqsfp6-p58"/>
+                <resource type="internal" val="0x20" res_name="zqsfp6-p57"/>
+                <resource type="internal" val="0x40" res_name="zqsfp6-p49"/>
+                <resource type="internal" val="0x80" res_name="zqsfp6-p50"/>
+                <resource type="internal" val="0x00" res_name="zqsfp6-post"/>
+            </function>
+        </device>
+        <device name="zqsfp7" slave="0x77">
+            <pre res_name="cpu-mux0-6"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="mux" drv="MUX">
+                <resource type="internal" val="0x01" res_name="zqsfp7-p59"/>
+                <resource type="internal" val="0x02" res_name="zqsfp7-p60"/>
+                <resource type="internal" val="0x04" res_name="zqsfp7-p61"/>
+                <resource type="internal" val="0x08" res_name="zqsfp7-p62"/>
+                <resource type="internal" val="0x10" res_name="zqsfp7-p63"/>
+                <resource type="internal" val="0x20" res_name="zqsfp7-p64"/>
+                <resource type="internal" val="0x40" res_name="zqsfp7-p52"/>
+                <resource type="internal" val="0x80" res_name="zqsfp7-p51"/>
+                <resource type="internal" val="0x00" res_name="zqsfp7-post"/>
+            </function>
+        </device>
+
+<!--
+    System FPGA and CPLD :
+-->
+        <device name="mbpld-1" slave="0x32">
+            <pre res_name="cpu-mux0-5"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="cpld" drv="CPLD">
+                <resource type="present" attr="in" offset="0x03" mask="0x40" match="0x40" res_name="psu-0-present"/>
+                <resource type="present" attr="in" offset="0x03" mask="0x80" match="0x80" res_name="psu-1-present"/>
+                <resource type="psu-powergood" attr="in" offset="0x03" mask="0x10" match="0x00" res_name="psu-0-powergood"/>
+                <resource type="psu-powergood" attr="in" offset="0x03" mask="0x20" match="0x00" res_name="psu-1-powergood"/>
+
+                <resource type="present" attr="in" offset="0x09" mask="0x08" match="0x00" res_name="fantray0-present"/>
+                <resource type="present" attr="in" offset="0x09" mask="0x04" match="0x00" res_name="fantray1-present"/>
+                <resource type="present" attr="in" offset="0x09" mask="0x02" match="0x00" res_name="fantray2-present"/>
+                <resource type="present" attr="in" offset="0x09" mask="0x01" match="0x00" res_name="fantray3-present"/>
+
+                <resource type="internal" attr="out" offset="0xb" mask="0x1" match="0x0" res_name="fan-eeprom0-wp-pre"/>
+                <resource type="internal" attr="out" offset="0xb" mask="0x1" match="0x1" res_name="fan-eeprom0-wp-post"/>
+                <resource type="internal" attr="out" offset="0xb" mask="0x2" match="0x0" res_name="fan-eeprom1-wp-pre"/>
+                <resource type="internal" attr="out" offset="0xb" mask="0x2" match="0x2" res_name="fan-eeprom1-wp-post"/>
+                <resource type="internal" attr="out" offset="0xb" mask="0x4" match="0x0" res_name="fan-eeprom2-wp-pre"/>
+                <resource type="internal" attr="out" offset="0xb" mask="0x4" match="0x4" res_name="fan-eeprom2-wp-post"/>
+                <resource type="internal" attr="out" offset="0xb" mask="0x8" match="0x0" res_name="fan-eeprom3-wp-pre"/>
+                <resource type="internal" attr="out" offset="0xb" mask="0x8" match="0x8" res_name="fan-eeprom3-wp-post"/>
+                
+                <resource type="sfp-lpmode" attr="out" offset="0x0e" mask="0x01" match="0x01" res_name="qsfp-lpmode-19"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0e" mask="0x02" match="0x02" res_name="qsfp-lpmode-20"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0e" mask="0x04" match="0x04" res_name="qsfp-lpmode-27"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0e" mask="0x08" match="0x08" res_name="qsfp-lpmode-28"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0e" mask="0x10" match="0x10" res_name="qsfp-lpmode-29"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0e" mask="0x20" match="0x20" res_name="qsfp-lpmode-30"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0e" mask="0x40" match="0x40" res_name="qsfp-lpmode-31"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0e" mask="0x80" match="0x80" res_name="qsfp-lpmode-32"/>
+                
+                <resource type="sfp-lpmode" attr="out" offset="0x0f" mask="0x01" match="0x01" res_name="qsfp-lpmode-51"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0f" mask="0x02" match="0x02" res_name="qsfp-lpmode-52"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0f" mask="0x04" match="0x04" res_name="qsfp-lpmode-59"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0f" mask="0x08" match="0x08" res_name="qsfp-lpmode-60"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0f" mask="0x10" match="0x10" res_name="qsfp-lpmode-61"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0f" mask="0x20" match="0x20" res_name="qsfp-lpmode-62"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0f" mask="0x40" match="0x40" res_name="qsfp-lpmode-63"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x0f" mask="0x80" match="0x80" res_name="qsfp-lpmode-64"/>
+
+                <resource type="present" attr="out" offset="0x12" mask="0x01" match="0x00" res_name="qsfp-present-19"/>
+                <resource type="present" attr="out" offset="0x12" mask="0x02" match="0x00" res_name="qsfp-present-20"/>
+                <resource type="present" attr="out" offset="0x12" mask="0x04" match="0x00" res_name="qsfp-present-27"/>
+                <resource type="present" attr="out" offset="0x12" mask="0x08" match="0x00" res_name="qsfp-present-28"/>
+                <resource type="present" attr="out" offset="0x12" mask="0x10" match="0x00" res_name="qsfp-present-29"/>
+                <resource type="present" attr="out" offset="0x12" mask="0x20" match="0x00" res_name="qsfp-present-30"/>
+                <resource type="present" attr="out" offset="0x12" mask="0x40" match="0x00" res_name="qsfp-present-31"/>
+                <resource type="present" attr="out" offset="0x12" mask="0x80" match="0x00" res_name="qsfp-present-32"/>
+
+                <resource type="present" attr="out" offset="0x13" mask="0x01" match="0x00" res_name="qsfp-present-51"/>
+                <resource type="present" attr="out" offset="0x13" mask="0x02" match="0x00" res_name="qsfp-present-52"/>
+                <resource type="present" attr="out" offset="0x13" mask="0x04" match="0x00" res_name="qsfp-present-59"/>
+                <resource type="present" attr="out" offset="0x13" mask="0x08" match="0x00" res_name="qsfp-present-60"/>
+                <resource type="present" attr="out" offset="0x13" mask="0x10" match="0x00" res_name="qsfp-present-61"/>
+                <resource type="present" attr="out" offset="0x13" mask="0x20" match="0x00" res_name="qsfp-present-62"/>
+                <resource type="present" attr="out" offset="0x13" mask="0x40" match="0x00" res_name="qsfp-present-63"/>
+                <resource type="present" attr="out" offset="0x13" mask="0x80" match="0x00" res_name="qsfp-present-64"/>
+
+                <resource type="sfp-reset" attr="out" offset="0x14" mask="0x01" match="0x00" res_name="qsfp-reset-19"/>
+                <resource type="sfp-reset" attr="out" offset="0x14" mask="0x02" match="0x00" res_name="qsfp-reset-20"/>
+                <resource type="sfp-reset" attr="out" offset="0x14" mask="0x04" match="0x00" res_name="qsfp-reset-27"/>
+                <resource type="sfp-reset" attr="out" offset="0x14" mask="0x08" match="0x00" res_name="qsfp-reset-28"/>
+                <resource type="sfp-reset" attr="out" offset="0x14" mask="0x10" match="0x00" res_name="qsfp-reset-29"/>
+                <resource type="sfp-reset" attr="out" offset="0x14" mask="0x20" match="0x00" res_name="qsfp-reset-30"/>
+                <resource type="sfp-reset" attr="out" offset="0x14" mask="0x40" match="0x00" res_name="qsfp-reset-31"/>
+                <resource type="sfp-reset" attr="out" offset="0x14" mask="0x80" match="0x00" res_name="qsfp-reset-32"/>
+
+                <resource type="sfp-reset" attr="out" offset="0x15" mask="0x01" match="0x00" res_name="qsfp-reset-51"/>
+                <resource type="sfp-reset" attr="out" offset="0x15" mask="0x02" match="0x00" res_name="qsfp-reset-52"/>
+                <resource type="sfp-reset" attr="out" offset="0x15" mask="0x04" match="0x00" res_name="qsfp-reset-59"/>
+                <resource type="sfp-reset" attr="out" offset="0x15" mask="0x08" match="0x00" res_name="qsfp-reset-60"/>
+                <resource type="sfp-reset" attr="out" offset="0x15" mask="0x10" match="0x00" res_name="qsfp-reset-61"/>
+                <resource type="sfp-reset" attr="out" offset="0x15" mask="0x20" match="0x00" res_name="qsfp-reset-62"/>
+                <resource type="sfp-reset" attr="out" offset="0x15" mask="0x40" match="0x00" res_name="qsfp-reset-63"/>
+                <resource type="sfp-reset" attr="out" offset="0x15" mask="0x80" match="0x00" res_name="qsfp-reset-64"/>
+
+                <resource type="sysled-off"             attr="out" offset="0x2a" mask="0x3" match="0x00" res_name="sysled-fan-off"/>
+                <resource type="sysled-green"           attr="out" offset="0x2a" mask="0x1" match="0x01" res_name="sysled-fan-green"/>
+                <resource type="sysled-orange"          attr="out" offset="0x2a" mask="0x2" match="0x03" res_name="sysled-fan-orange"/>
+
+                <resource type="sysled-off"             attr="out" offset="0x2b" mask="0x7" match="0x00" res_name="sysled-system-off"/>
+                <resource type="sysled-green"           attr="out" offset="0x2b" mask="0x7" match="0x04" res_name="sysled-system-green"/>
+                <resource type="sysled-green-blinking"  attr="out" offset="0x2b" mask="0x7" match="0x05" res_name="sysled-system-green-blinking"/>
+                <resource type="sysled-orange"          attr="out" offset="0x2b" mask="0x7" match="0x06" res_name="sysled-system-orange"/>
+                <resource type="sysled-orange-blinking" attr="out" offset="0x2b" mask="0x7" match="0x07" res_name="sysled-system-orange-blinking"/>
+                
+                <resource type="sysled-off"             attr="out" offset="0x2c" mask="0x3" match="0x00" res_name="sysled-power-0-off"/>
+                <resource type="sysled-green"           attr="out" offset="0x2c" mask="0x1" match="0x01" res_name="sysled-power-0-green"/>
+                <resource type="sysled-orange"          attr="out" offset="0x2c" mask="0x2" match="0x03" res_name="sysled-power-0-orange"/>
+
+                <resource type="sysled-off"             attr="out" offset="0x2d" mask="0x3" match="0x00" res_name="sysled-power-1-off"/>
+                <resource type="sysled-green"           attr="out" offset="0x2d" mask="0x1" match="0x01" res_name="sysled-power-1-green"/>
+                <resource type="sysled-orange"          attr="out" offset="0x2d" mask="0x2" match="0x03" res_name="sysled-power-1-orange"/>
+            </function>
+        </device>
+        <device name="mbpld-2" slave="0x33">
+            <pre res_name="cpu-mux0-5"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="cpld" drv="CPLD">
+                <resource type="internal" attr="out" offset="0x30" mask="0x7" match="0x1" res_name="test-2"/>
+            </function>
+        </device>
+        <device name="mbpld-3" slave="0x34">
+            <pre res_name="cpu-mux0-5"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="cpld" drv="CPLD">
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x01" match="0x01" res_name="qsfp-lpmode-1"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x02" match="0x02" res_name="qsfp-lpmode-2"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x04" match="0x04" res_name="qsfp-lpmode-3"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x08" match="0x08" res_name="qsfp-lpmode-4"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x10" match="0x10" res_name="qsfp-lpmode-5"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x20" match="0x20" res_name="qsfp-lpmode-6"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x40" match="0x40" res_name="qsfp-lpmode-7"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x80" match="0x80" res_name="qsfp-lpmode-8"/>
+
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x01" match="0x01" res_name="qsfp-lpmode-9"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x02" match="0x02" res_name="qsfp-lpmode-10"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x04" match="0x04" res_name="qsfp-lpmode-15"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x08" match="0x08" res_name="qsfp-lpmode-16"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x10" match="0x10" res_name="qsfp-lpmode-33"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x20" match="0x20" res_name="qsfp-lpmode-34"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x40" match="0x40" res_name="qsfp-lpmode-35"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x80" match="0x80" res_name="qsfp-lpmode-36"/>
+
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x01" match="0x01" res_name="qsfp-lpmode-37"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x02" match="0x02" res_name="qsfp-lpmode-38"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x04" match="0x04" res_name="qsfp-lpmode-39"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x08" match="0x08" res_name="qsfp-lpmode-40"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x10" match="0x10" res_name="qsfp-lpmode-41"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x20" match="0x20" res_name="qsfp-lpmode-42"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x40" match="0x40" res_name="qsfp-lpmode-47"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x80" match="0x80" res_name="qsfp-lpmode-48"/>
+
+                <resource type="present" attr="out" offset="0x08" mask="0x01" match="0x00" res_name="qsfp-present-1"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x02" match="0x00" res_name="qsfp-present-2"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x04" match="0x00" res_name="qsfp-present-3"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x08" match="0x00" res_name="qsfp-present-4"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x10" match="0x00" res_name="qsfp-present-5"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x20" match="0x00" res_name="qsfp-present-6"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x40" match="0x00" res_name="qsfp-present-7"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x80" match="0x00" res_name="qsfp-present-8"/>
+
+                <resource type="present" attr="out" offset="0x09" mask="0x01" match="0x00" res_name="qsfp-present-9"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x02" match="0x00" res_name="qsfp-present-10"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x04" match="0x00" res_name="qsfp-present-15"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x08" match="0x00" res_name="qsfp-present-16"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x10" match="0x00" res_name="qsfp-present-33"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x20" match="0x00" res_name="qsfp-present-34"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x40" match="0x00" res_name="qsfp-present-35"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x80" match="0x00" res_name="qsfp-present-36"/>
+
+                <resource type="present" attr="out" offset="0x0a" mask="0x01" match="0x00" res_name="qsfp-present-37"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x02" match="0x00" res_name="qsfp-present-38"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x04" match="0x00" res_name="qsfp-present-39"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x08" match="0x00" res_name="qsfp-present-40"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x10" match="0x00" res_name="qsfp-present-41"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x20" match="0x00" res_name="qsfp-present-42"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x40" match="0x00" res_name="qsfp-present-47"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x80" match="0x00" res_name="qsfp-present-48"/>
+
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x01" match="0x00" res_name="qsfp-reset-1"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x02" match="0x00" res_name="qsfp-reset-2"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x04" match="0x00" res_name="qsfp-reset-3"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x08" match="0x00" res_name="qsfp-reset-4"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x10" match="0x00" res_name="qsfp-reset-5"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x20" match="0x00" res_name="qsfp-reset-6"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x40" match="0x00" res_name="qsfp-reset-7"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x80" match="0x00" res_name="qsfp-reset-8"/>
+
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x01" match="0x00" res_name="qsfp-reset-9"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x02" match="0x00" res_name="qsfp-reset-10"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x04" match="0x00" res_name="qsfp-reset-15"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x08" match="0x00" res_name="qsfp-reset-16"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x10" match="0x00" res_name="qsfp-reset-33"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x20" match="0x00" res_name="qsfp-reset-34"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x40" match="0x00" res_name="qsfp-reset-35"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x80" match="0x00" res_name="qsfp-reset-36"/>
+
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x01" match="0x00" res_name="qsfp-reset-37"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x02" match="0x00" res_name="qsfp-reset-38"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x04" match="0x00" res_name="qsfp-reset-39"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x08" match="0x00" res_name="qsfp-reset-40"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x10" match="0x00" res_name="qsfp-reset-41"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x20" match="0x00" res_name="qsfp-reset-42"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x40" match="0x00" res_name="qsfp-reset-47"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x80" match="0x00" res_name="qsfp-reset-48"/>
+            </function>
+        </device>
+        <device name="mbpld-4" slave="0x35">
+            <pre res_name="cpu-mux0-5"/>
+            <post res_name="cpu-mux0-post"/>
+            <function type="cpld" drv="CPLD">
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x01" match="0x01" res_name="qsfp-lpmode-11"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x02" match="0x02" res_name="qsfp-lpmode-12"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x04" match="0x04" res_name="qsfp-lpmode-13"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x08" match="0x08" res_name="qsfp-lpmode-14"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x10" match="0x10" res_name="qsfp-lpmode-17"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x20" match="0x20" res_name="qsfp-lpmode-18"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x40" match="0x40" res_name="qsfp-lpmode-21"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x02" mask="0x80" match="0x80" res_name="qsfp-lpmode-22"/>
+
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x01" match="0x01" res_name="qsfp-lpmode-23"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x02" match="0x02" res_name="qsfp-lpmode-24"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x04" match="0x04" res_name="qsfp-lpmode-25"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x08" match="0x08" res_name="qsfp-lpmode-26"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x10" match="0x10" res_name="qsfp-lpmode-43"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x20" match="0x20" res_name="qsfp-lpmode-44"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x40" match="0x40" res_name="qsfp-lpmode-45"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x03" mask="0x80" match="0x80" res_name="qsfp-lpmode-46"/>
+
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x01" match="0x01" res_name="qsfp-lpmode-49"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x02" match="0x02" res_name="qsfp-lpmode-50"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x04" match="0x04" res_name="qsfp-lpmode-53"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x08" match="0x08" res_name="qsfp-lpmode-54"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x10" match="0x10" res_name="qsfp-lpmode-55"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x20" match="0x20" res_name="qsfp-lpmode-56"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x40" match="0x40" res_name="qsfp-lpmode-57"/>
+                <resource type="sfp-lpmode" attr="out" offset="0x04" mask="0x80" match="0x80" res_name="qsfp-lpmode-58"/>
+
+                <resource type="present" attr="out" offset="0x08" mask="0x01" match="0x00" res_name="qsfp-present-11"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x02" match="0x00" res_name="qsfp-present-12"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x04" match="0x00" res_name="qsfp-present-13"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x08" match="0x00" res_name="qsfp-present-14"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x10" match="0x00" res_name="qsfp-present-17"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x20" match="0x00" res_name="qsfp-present-18"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x40" match="0x00" res_name="qsfp-present-21"/>
+                <resource type="present" attr="out" offset="0x08" mask="0x80" match="0x00" res_name="qsfp-present-22"/>
+
+                <resource type="present" attr="out" offset="0x09" mask="0x01" match="0x00" res_name="qsfp-present-23"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x02" match="0x00" res_name="qsfp-present-24"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x04" match="0x00" res_name="qsfp-present-25"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x08" match="0x00" res_name="qsfp-present-26"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x10" match="0x00" res_name="qsfp-present-43"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x20" match="0x00" res_name="qsfp-present-44"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x40" match="0x00" res_name="qsfp-present-45"/>
+                <resource type="present" attr="out" offset="0x09" mask="0x80" match="0x00" res_name="qsfp-present-46"/>
+
+                <resource type="present" attr="out" offset="0x0a" mask="0x01" match="0x00" res_name="qsfp-present-49"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x02" match="0x00" res_name="qsfp-present-50"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x04" match="0x00" res_name="qsfp-present-53"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x08" match="0x00" res_name="qsfp-present-54"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x10" match="0x00" res_name="qsfp-present-55"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x20" match="0x00" res_name="qsfp-present-56"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x40" match="0x00" res_name="qsfp-present-57"/>
+                <resource type="present" attr="out" offset="0x0a" mask="0x80" match="0x00" res_name="qsfp-present-58"/>
+
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x01" match="0x00" res_name="qsfp-reset-11"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x02" match="0x00" res_name="qsfp-reset-12"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x04" match="0x00" res_name="qsfp-reset-13"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x08" match="0x00" res_name="qsfp-reset-14"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x10" match="0x00" res_name="qsfp-reset-17"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x20" match="0x00" res_name="qsfp-reset-18"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x40" match="0x00" res_name="qsfp-reset-21"/>
+                <resource type="sfp-reset" attr="out" offset="0x0b" mask="0x80" match="0x00" res_name="qsfp-reset-22"/>
+
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x01" match="0x00" res_name="qsfp-reset-23"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x02" match="0x00" res_name="qsfp-reset-24"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x04" match="0x00" res_name="qsfp-reset-25"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x08" match="0x00" res_name="qsfp-reset-26"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x10" match="0x00" res_name="qsfp-reset-43"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x20" match="0x00" res_name="qsfp-reset-44"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x40" match="0x00" res_name="qsfp-reset-45"/>
+                <resource type="sfp-reset" attr="out" offset="0x0c" mask="0x80" match="0x00" res_name="qsfp-reset-46"/>
+
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x01" match="0x00" res_name="qsfp-reset-49"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x02" match="0x00" res_name="qsfp-reset-50"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x04" match="0x00" res_name="qsfp-reset-53"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x08" match="0x00" res_name="qsfp-reset-54"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x10" match="0x00" res_name="qsfp-reset-55"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x20" match="0x00" res_name="qsfp-reset-56"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x40" match="0x00" res_name="qsfp-reset-57"/>
+                <resource type="sfp-reset" attr="out" offset="0x0d" mask="0x80" match="0x00" res_name="qsfp-reset-58"/>
+            </function>
+        </device>
+<!--
+    FAN and Fan control :
+-->
+
+<!--
+    QSFP media:
+        The order in the media table determines the number of the PORT.
+-->
+        <device name="eeprom-port-1" slave="0x50">
+            <pre res_name="zqsfp0-p1"/>
+            <post res_name="zqsfp0-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-1" alen="1">
+                    <reference res_name="qsfp-present-1"/>
+                    <reference res_name="qsfp-lpmode-1"/>
+                    <reference res_name="qsfp-reset-1"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-2" slave="0x50">
+            <pre res_name="zqsfp0-p2"/>
+            <post res_name="zqsfp0-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-2" alen="1">
+                    <reference res_name="qsfp-present-2"/>
+                    <reference res_name="qsfp-lpmode-2"/>
+                    <reference res_name="qsfp-reset-2"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-3" slave="0x50">
+            <pre res_name="zqsfp0-p3"/>
+            <post res_name="zqsfp0-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-3" alen="1">
+                    <reference res_name="qsfp-present-3"/>
+                    <reference res_name="qsfp-lpmode-3"/>
+                    <reference res_name="qsfp-reset-3"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-4" slave="0x50">
+            <pre res_name="zqsfp0-p4"/>
+            <post res_name="zqsfp0-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-4" alen="1">
+                    <reference res_name="qsfp-present-4"/>
+                    <reference res_name="qsfp-lpmode-4"/>
+                    <reference res_name="qsfp-reset-4"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-5" slave="0x50">
+            <pre res_name="zqsfp0-p5"/>
+            <post res_name="zqsfp0-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-5" alen="1">
+                    <reference res_name="qsfp-present-5"/>
+                    <reference res_name="qsfp-lpmode-5"/>
+                    <reference res_name="qsfp-reset-5"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-6" slave="0x50">
+            <pre res_name="zqsfp0-p6"/>
+            <post res_name="zqsfp0-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-6" alen="1">
+                    <reference res_name="qsfp-present-6"/>
+                    <reference res_name="qsfp-lpmode-6"/>
+                    <reference res_name="qsfp-reset-6"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-7" slave="0x50">
+            <pre res_name="zqsfp0-p7"/>
+            <post res_name="zqsfp0-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-7" alen="1">
+                    <reference res_name="qsfp-present-7"/>
+                    <reference res_name="qsfp-lpmode-7"/>
+                    <reference res_name="qsfp-reset-7"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-8" slave="0x50">
+            <pre res_name="zqsfp0-p8"/>
+            <post res_name="zqsfp0-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-8" alen="1">
+                    <reference res_name="qsfp-present-8"/>
+                    <reference res_name="qsfp-lpmode-8"/>
+                    <reference res_name="qsfp-reset-8"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-9" slave="0x50">
+            <pre res_name="zqsfp1-p9"/>
+            <post res_name="zqsfp1-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-9" alen="1">
+                    <reference res_name="qsfp-present-9"/>
+                    <reference res_name="qsfp-lpmode-9"/>
+                    <reference res_name="qsfp-reset-9"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-10" slave="0x50">
+            <pre res_name="zqsfp1-p10"/>
+            <post res_name="zqsfp1-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-10" alen="1">
+                    <reference res_name="qsfp-present-10"/>
+                    <reference res_name="qsfp-lpmode-10"/>
+                    <reference res_name="qsfp-reset-10"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-11" slave="0x50">
+            <pre res_name="zqsfp1-p11"/>
+            <post res_name="zqsfp1-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-11" alen="1">
+                    <reference res_name="qsfp-present-11"/>
+                    <reference res_name="qsfp-lpmode-11"/>
+                    <reference res_name="qsfp-reset-11"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-12" slave="0x50">
+            <pre res_name="zqsfp1-p12"/>
+            <post res_name="zqsfp1-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-12" alen="1">
+                    <reference res_name="qsfp-present-12"/>
+                    <reference res_name="qsfp-lpmode-12"/>
+                    <reference res_name="qsfp-reset-12"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-13" slave="0x50">
+            <pre res_name="zqsfp1-p13"/>
+            <post res_name="zqsfp1-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-13" alen="1">
+                    <reference res_name="qsfp-present-13"/>
+                    <reference res_name="qsfp-lpmode-13"/>
+                    <reference res_name="qsfp-reset-13"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-14" slave="0x50">
+            <pre res_name="zqsfp1-p14"/>
+            <post res_name="zqsfp1-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-14" alen="1">
+                    <reference res_name="qsfp-present-14"/>
+                    <reference res_name="qsfp-lpmode-14"/>
+                    <reference res_name="qsfp-reset-14"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-15" slave="0x50">
+            <pre res_name="zqsfp1-p15"/>
+            <post res_name="zqsfp1-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-15" alen="1">
+                    <reference res_name="qsfp-present-15"/>
+                    <reference res_name="qsfp-lpmode-15"/>
+                    <reference res_name="qsfp-reset-15"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-16" slave="0x50">
+            <pre res_name="zqsfp1-p16"/>
+            <post res_name="zqsfp1-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-16" alen="1">
+                    <reference res_name="qsfp-present-16"/>
+                    <reference res_name="qsfp-lpmode-16"/>
+                    <reference res_name="qsfp-reset-16"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-17" slave="0x50">
+            <pre res_name="zqsfp2-p17"/>
+            <post res_name="zqsfp2-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-17" alen="1">
+                    <reference res_name="qsfp-present-17"/>
+                    <reference res_name="qsfp-lpmode-17"/>
+                    <reference res_name="qsfp-reset-17"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-18" slave="0x50">
+            <pre res_name="zqsfp2-p18"/>
+            <post res_name="zqsfp2-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-18" alen="1">
+                    <reference res_name="qsfp-present-18"/>
+                    <reference res_name="qsfp-lpmode-18"/>
+                    <reference res_name="qsfp-reset-18"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-19" slave="0x50">
+            <pre res_name="zqsfp3-p19"/>
+            <post res_name="zqsfp2-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-19" alen="1">
+                    <reference res_name="qsfp-present-19"/>
+                    <reference res_name="qsfp-lpmode-19"/>
+                    <reference res_name="qsfp-reset-19"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-20" slave="0x50">
+            <pre res_name="zqsfp3-p20"/>
+            <post res_name="zqsfp2-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-20" alen="1">
+                    <reference res_name="qsfp-present-20"/>
+                    <reference res_name="qsfp-lpmode-20"/>
+                    <reference res_name="qsfp-reset-20"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-21" slave="0x50">
+            <pre res_name="zqsfp2-p21"/>
+            <post res_name="zqsfp2-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-21" alen="1">
+                    <reference res_name="qsfp-present-21"/>
+                    <reference res_name="qsfp-lpmode-21"/>
+                    <reference res_name="qsfp-reset-21"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-22" slave="0x50">
+            <pre res_name="zqsfp2-p22"/>
+            <post res_name="zqsfp2-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-22" alen="1">
+                    <reference res_name="qsfp-present-22"/>
+                    <reference res_name="qsfp-lpmode-22"/>
+                    <reference res_name="qsfp-reset-22"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-23" slave="0x50">
+            <pre res_name="zqsfp2-p23"/>
+            <post res_name="zqsfp2-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-23" alen="1">
+                    <reference res_name="qsfp-present-23"/>
+                    <reference res_name="qsfp-lpmode-23"/>
+                    <reference res_name="qsfp-reset-23"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-24" slave="0x50">
+            <pre res_name="zqsfp2-p24"/>
+            <post res_name="zqsfp2-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-24" alen="1">
+                    <reference res_name="qsfp-present-24"/>
+                    <reference res_name="qsfp-lpmode-24"/>
+                    <reference res_name="qsfp-reset-24"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-25" slave="0x50">
+            <pre res_name="zqsfp2-p25"/>
+            <post res_name="zqsfp2-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-25" alen="1">
+                    <reference res_name="qsfp-present-25"/>
+                    <reference res_name="qsfp-lpmode-25"/>
+                    <reference res_name="qsfp-reset-25"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-26" slave="0x50">
+            <pre res_name="zqsfp2-p26"/>
+            <post res_name="zqsfp2-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-26" alen="1">
+                    <reference res_name="qsfp-present-26"/>
+                    <reference res_name="qsfp-lpmode-26"/>
+                    <reference res_name="qsfp-reset-26"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-27" slave="0x50">
+            <pre res_name="zqsfp3-p27"/>
+            <post res_name="zqsfp3-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-27" alen="1">
+                    <reference res_name="qsfp-present-27"/>
+                    <reference res_name="qsfp-lpmode-27"/>
+                    <reference res_name="qsfp-reset-27"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-28" slave="0x50">
+            <pre res_name="zqsfp3-p28"/>
+            <post res_name="zqsfp3-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-28" alen="1">
+                    <reference res_name="qsfp-present-28"/>
+                    <reference res_name="qsfp-lpmode-28"/>
+                    <reference res_name="qsfp-reset-28"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-29" slave="0x50">
+            <pre res_name="zqsfp3-p29"/>
+            <post res_name="zqsfp3-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-29" alen="1">
+                    <reference res_name="qsfp-present-29"/>
+                    <reference res_name="qsfp-lpmode-29"/>
+                    <reference res_name="qsfp-reset-29"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-30" slave="0x50">
+            <pre res_name="zqsfp3-p30"/>
+            <post res_name="zqsfp3-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-30" alen="1">
+                    <reference res_name="qsfp-present-30"/>
+                    <reference res_name="qsfp-lpmode-30"/>
+                    <reference res_name="qsfp-reset-30"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-31" slave="0x50">
+            <pre res_name="zqsfp3-p31"/>
+            <post res_name="zqsfp3-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-31" alen="1">
+                    <reference res_name="qsfp-present-31"/>
+                    <reference res_name="qsfp-lpmode-31"/>
+                    <reference res_name="qsfp-reset-31"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-32" slave="0x50">
+            <pre res_name="zqsfp3-p32"/>
+            <post res_name="zqsfp3-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-32" alen="1">
+                    <reference res_name="qsfp-present-32"/>
+                    <reference res_name="qsfp-lpmode-32"/>
+                    <reference res_name="qsfp-reset-32"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-33" slave="0x50">
+            <pre res_name="zqsfp4-p33"/>
+            <post res_name="zqsfp4-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-33" alen="1">
+                    <reference res_name="qsfp-present-33"/>
+                    <reference res_name="qsfp-lpmode-33"/>
+                    <reference res_name="qsfp-reset-33"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-34" slave="0x50">
+            <pre res_name="zqsfp4-p34"/>
+            <post res_name="zqsfp4-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-34" alen="1">
+                    <reference res_name="qsfp-present-34"/>
+                    <reference res_name="qsfp-lpmode-34"/>
+                    <reference res_name="qsfp-reset-34"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-35" slave="0x50">
+            <pre res_name="zqsfp4-p35"/>
+            <post res_name="zqsfp4-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-35" alen="1">
+                    <reference res_name="qsfp-present-35"/>
+                    <reference res_name="qsfp-lpmode-35"/>
+                    <reference res_name="qsfp-reset-35"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-36" slave="0x50">
+            <pre res_name="zqsfp4-p36"/>
+            <post res_name="zqsfp4-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-36" alen="1">
+                    <reference res_name="qsfp-present-36"/>
+                    <reference res_name="qsfp-lpmode-36"/>
+                    <reference res_name="qsfp-reset-36"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-37" slave="0x50">
+            <pre res_name="zqsfp4-p37"/>
+            <post res_name="zqsfp4-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-37" alen="1">
+                    <reference res_name="qsfp-present-37"/>
+                    <reference res_name="qsfp-lpmode-37"/>
+                    <reference res_name="qsfp-reset-37"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-38" slave="0x50">
+            <pre res_name="zqsfp4-p38"/>
+            <post res_name="zqsfp4-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-38" alen="1">
+                    <reference res_name="qsfp-present-38"/>
+                    <reference res_name="qsfp-lpmode-38"/>
+                    <reference res_name="qsfp-reset-38"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-39" slave="0x50">
+            <pre res_name="zqsfp4-p39"/>
+            <post res_name="zqsfp4-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-39" alen="1">
+                    <reference res_name="qsfp-present-39"/>
+                    <reference res_name="qsfp-lpmode-39"/>
+                    <reference res_name="qsfp-reset-39"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-40" slave="0x50">
+            <pre res_name="zqsfp4-p40"/>
+            <post res_name="zqsfp4-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-40" alen="1">
+                    <reference res_name="qsfp-present-40"/>
+                    <reference res_name="qsfp-lpmode-40"/>
+                    <reference res_name="qsfp-reset-40"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-41" slave="0x50">
+            <pre res_name="zqsfp5-p41"/>
+            <post res_name="zqsfp5-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-41" alen="1">
+                    <reference res_name="qsfp-present-41"/>
+                    <reference res_name="qsfp-lpmode-41"/>
+                    <reference res_name="qsfp-reset-41"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-42" slave="0x50">
+            <pre res_name="zqsfp5-p42"/>
+            <post res_name="zqsfp5-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-42" alen="1">
+                    <reference res_name="qsfp-present-42"/>
+                    <reference res_name="qsfp-lpmode-42"/>
+                    <reference res_name="qsfp-reset-42"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-43" slave="0x50">
+            <pre res_name="zqsfp5-p43"/>
+            <post res_name="zqsfp5-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-43" alen="1">
+                    <reference res_name="qsfp-present-43"/>
+                    <reference res_name="qsfp-lpmode-43"/>
+                    <reference res_name="qsfp-reset-43"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-44" slave="0x50">
+            <pre res_name="zqsfp5-p44"/>
+            <post res_name="zqsfp5-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-44" alen="1">
+                    <reference res_name="qsfp-present-44"/>
+                    <reference res_name="qsfp-lpmode-44"/>
+                    <reference res_name="qsfp-reset-44"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-45" slave="0x50">
+            <pre res_name="zqsfp5-p45"/>
+            <post res_name="zqsfp5-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-45" alen="1">
+                    <reference res_name="qsfp-present-45"/>
+                    <reference res_name="qsfp-lpmode-45"/>
+                    <reference res_name="qsfp-reset-45"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-46" slave="0x50">
+            <pre res_name="zqsfp5-p46"/>
+            <post res_name="zqsfp5-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-46" alen="1">
+                    <reference res_name="qsfp-present-46"/>
+                    <reference res_name="qsfp-lpmode-46"/>
+                    <reference res_name="qsfp-reset-46"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-47" slave="0x50">
+            <pre res_name="zqsfp5-p47"/>
+            <post res_name="zqsfp5-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-47" alen="1">
+                    <reference res_name="qsfp-present-47"/>
+                    <reference res_name="qsfp-lpmode-47"/>
+                    <reference res_name="qsfp-reset-47"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-48" slave="0x50">
+            <pre res_name="zqsfp5-p48"/>
+            <post res_name="zqsfp5-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-48" alen="1">
+                    <reference res_name="qsfp-present-48"/>
+                    <reference res_name="qsfp-lpmode-48"/>
+                    <reference res_name="qsfp-reset-48"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-49" slave="0x50">
+            <pre res_name="zqsfp6-p49"/>
+            <post res_name="zqsfp6-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-49" alen="1">
+                    <reference res_name="qsfp-present-49"/>
+                    <reference res_name="qsfp-lpmode-49"/>
+                    <reference res_name="qsfp-reset-49"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-50" slave="0x50">
+            <pre res_name="zqsfp6-p50"/>
+            <post res_name="zqsfp6-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-50" alen="1">
+                    <reference res_name="qsfp-present-50"/>
+                    <reference res_name="qsfp-lpmode-50"/>
+                    <reference res_name="qsfp-reset-50"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-51" slave="0x50">
+            <pre res_name="zqsfp7-p51"/>
+            <post res_name="zqsfp7-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-51" alen="1">
+                    <reference res_name="qsfp-present-51"/>
+                    <reference res_name="qsfp-lpmode-51"/>
+                    <reference res_name="qsfp-reset-51"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-52" slave="0x50">
+            <pre res_name="zqsfp7-p52"/>
+            <post res_name="zqsfp7-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-52" alen="1">
+                    <reference res_name="qsfp-present-52"/>
+                    <reference res_name="qsfp-lpmode-52"/>
+                    <reference res_name="qsfp-reset-52"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-53" slave="0x50">
+            <pre res_name="zqsfp6-p53"/>
+            <post res_name="zqsfp6-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-53" alen="1">
+                    <reference res_name="qsfp-present-53"/>
+                    <reference res_name="qsfp-lpmode-53"/>
+                    <reference res_name="qsfp-reset-53"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-54" slave="0x50">
+            <pre res_name="zqsfp6-p54"/>
+            <post res_name="zqsfp6-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-54" alen="1">
+                    <reference res_name="qsfp-present-54"/>
+                    <reference res_name="qsfp-lpmode-54"/>
+                    <reference res_name="qsfp-reset-54"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-55" slave="0x50">
+            <pre res_name="zqsfp6-p55"/>
+            <post res_name="zqsfp6-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-55" alen="1">
+                    <reference res_name="qsfp-present-55"/>
+                    <reference res_name="qsfp-lpmode-55"/>
+                    <reference res_name="qsfp-reset-55"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-56" slave="0x50">
+            <pre res_name="zqsfp6-p56"/>
+            <post res_name="zqsfp6-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-56" alen="1">
+                    <reference res_name="qsfp-present-56"/>
+                    <reference res_name="qsfp-lpmode-56"/>
+                    <reference res_name="qsfp-reset-56"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-57" slave="0x50">
+            <pre res_name="zqsfp6-p57"/>
+            <post res_name="zqsfp6-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-57" alen="1">
+                    <reference res_name="qsfp-present-57"/>
+                    <reference res_name="qsfp-lpmode-57"/>
+                    <reference res_name="qsfp-reset-57"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-58" slave="0x50">
+            <pre res_name="zqsfp6-p58"/>
+            <post res_name="zqsfp6-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-58" alen="1">
+                    <reference res_name="qsfp-present-58"/>
+                    <reference res_name="qsfp-lpmode-58"/>
+                    <reference res_name="qsfp-reset-58"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-59" slave="0x50">
+            <pre res_name="zqsfp7-p59"/>
+            <post res_name="zqsfp7-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-59" alen="1">
+                    <reference res_name="qsfp-present-59"/>
+                    <reference res_name="qsfp-lpmode-59"/>
+                    <reference res_name="qsfp-reset-59"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-60" slave="0x50">
+            <pre res_name="zqsfp7-p60"/>
+            <post res_name="zqsfp7-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-60" alen="1">
+                    <reference res_name="qsfp-present-60"/>
+                    <reference res_name="qsfp-lpmode-60"/>
+                    <reference res_name="qsfp-reset-60"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-61" slave="0x50">
+            <pre res_name="zqsfp7-p61"/>
+            <post res_name="zqsfp7-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-61" alen="1">
+                    <reference res_name="qsfp-present-61"/>
+                    <reference res_name="qsfp-lpmode-61"/>
+                    <reference res_name="qsfp-reset-61"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-62" slave="0x50">
+            <pre res_name="zqsfp7-p62"/>
+            <post res_name="zqsfp7-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-62" alen="1">
+                    <reference res_name="qsfp-present-62"/>
+                    <reference res_name="qsfp-lpmode-62"/>
+                    <reference res_name="qsfp-reset-62"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-63" slave="0x50">
+            <pre res_name="zqsfp7-p63"/>
+            <post res_name="zqsfp7-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-63" alen="1">
+                    <reference res_name="qsfp-present-63"/>
+                    <reference res_name="qsfp-lpmode-63"/>
+                    <reference res_name="qsfp-reset-63"/>
+                </resource>
+            </function>
+        </device>
+        <device type="media" drv="QSFPPLUS" name="eeprom-port-64" slave="0x50">
+            <pre res_name="zqsfp7-p64"/>
+            <post res_name="zqsfp7-post"/>
+            <function type="media" drv="QSFPPLUS">
+                <resource type="sfp-eeprom" res_name="eeprom-port-64" alen="1">
+                    <reference res_name="qsfp-present-64"/>
+                    <reference res_name="qsfp-lpmode-64"/>
+                    <reference res_name="qsfp-reset-64"/>
+                </resource>
+            </function>
+        </device>
+<!--
+    System ONIE EEPROM :
+        Although this is an EEPROM, but we have applied the ONIE format(Driver).
+        The type of resources should be classified in the system (onie-eeprom).
+-->
+
+<!--
+    FAN ONIE EEPROM :
+        Although this is an EEPROM, but we have applied the ONIE format(Driver).
+        The type of resources should be classified in the fan (fan-eeprom).
+-->
+
+<!-- Thermal group start -->
+
+    </I2C>
+
+    <IPMB bus="0">
+        <device name="emc2305-0" slave="0x4d">
+            <function type="fan" drv="EMC2305">
+                <resource type="fan" unit="0" res_name="fan-0" ctrl_type="RPM" fan_max_speed="13200" fan_def_speed="6600">
+                    <reference res_name="fantray0-present"/>
+                </resource>
+                <resource type="fan" unit="1" res_name="fan-1" ctrl_type="RPM" fan_max_speed="13200" fan_def_speed="6600">
+                    <reference res_name="fantray1-present"/>
+                </resource>
+                <resource type="fan" unit="2" res_name="fan-2" ctrl_type="RPM" fan_max_speed="13200" fan_def_speed="6600">
+                    <reference res_name="fantray2-present"/>
+                </resource>                
+                <resource type="fan" unit="3" res_name="fan-3" ctrl_type="RPM" fan_max_speed="13200" fan_def_speed="6600">
+                    <reference res_name="fantray3-present"/>
+                </resource>
+            </function>
+        </device>
+        <device name="fantray0-eeprom" slave="0x51">
+            <pre res_name="fan-eeprom0-wp-pre"/>
+            <post res_name="fan-eeprom0-wp-post"/>
+            <function type="eeprom" drv="EEPROM">
+                <resource type="eeprom" res_name="fantray0-eeprom" offset="0" dlen="255" alen="1">
+                    <reference res_name="fantray0-present"/>
+                </resource>
+            </function>
+        </device>
+        <device name="fantray1-eeprom" slave="0x52">
+            <pre res_name="fan-eeprom1-wp-pre"/>
+            <post res_name="fan-eeprom1-wp-post"/>
+            <function type="eeprom" drv="EEPROM">
+                <resource type="eeprom" res_name="fantray1-eeprom" offset="0" dlen="255" alen="1">
+                    <reference res_name="fantray1-present"/>
+                </resource>
+            </function>            
+        </device>
+        <device name="fantray2-eeprom" slave="0x53">
+            <pre res_name="fan-eeprom2-wp-pre"/>
+            <post res_name="fan-eeprom2-wp-post"/>
+            <function type="eeprom" drv="EEPROM">
+                <resource type="eeprom" res_name="fantray2-eeprom" offset="0" dlen="255" alen="1">
+                    <reference res_name="fantray2-present"/>
+                </resource>
+            </function>
+        </device>
+        <device name="fantray3-eeprom" slave="0x54">
+            <pre res_name="fan-eeprom3-wp-pre"/>
+            <post res_name="fan-eeprom3-wp-post"/>
+            <function type="eeprom" drv="EEPROM">
+                <resource type="eeprom" res_name="fantray3-eeprom" offset="0" dlen="255" alen="1">
+                    <reference res_name="fantray3-present"/>
+                </resource>
+            </function>
+        </device>
+    </IPMB>
+    <IPMB bus="2">
+        <device name="emc2305-1" slave="0x4d">
+            <function type="fan" drv="EMC2305">
+                <resource type="fan" unit="0" res_name="fan-0" ctrl_type="RPM" fan_max_speed="13200" fan_def_speed="6600">
+                    <reference res_name="fantray0-present"/>
+                </resource>
+                <resource type="fan" unit="1" res_name="fan-1" ctrl_type="RPM" fan_max_speed="13200" fan_def_speed="6600">
+                    <reference res_name="fantray1-present"/>
+                </resource>
+                <resource type="fan" unit="2" res_name="fan-2" ctrl_type="RPM" fan_max_speed="13200" fan_def_speed="6600">
+                    <reference res_name="fantray2-present"/>
+                </resource>                
+                <resource type="fan" unit="3" res_name="fan-3" ctrl_type="RPM" fan_max_speed="13200" fan_def_speed="6600">
+                    <reference res_name="fantray3-present"/>
+                </resource>
+            </function>
+        </device>
+        <device name="lm75-0" slave="0x4a">
+            <function type="thermal" drv="TMP75">
+                <resource type="thermal" unit="0" res_name="thermal-0" low_threshold="10" high_threshold="100"/>
+            </function>
+        </device>
+        <device name="lm75-1" slave="0x4b">
+            <function type="thermal" drv="TMP75">
+                <resource type="thermal" unit="0" res_name="thermal-1" low_threshold="10" high_threshold="100"/>
+            </function>
+        </device>
+        <device name="lm75-2" slave="0x4c">
+            <function type="thermal" drv="TMP75">
+                <resource type="thermal" unit="0" res_name="thermal-2" low_threshold="10" high_threshold="100"/>
+            </function>
+        </device>
+        <device name="lm75-3" slave="0x4e">
+            <function type="thermal" drv="TMP75">
+                <resource type="thermal" unit="0" res_name="thermal-3" low_threshold="10" high_threshold="100"/>
+            </function>
+        </device>
+        <device name="lm75-4" slave="0x4f">
+            <function type="thermal" drv="TMP75">
+                <resource type="thermal" unit="0" res_name="thermal-4" low_threshold="10" high_threshold="100"/>
+            </function>
+        </device>
+        <device name="tmp461-0" slave="0x48">
+            <function type="thermal" drv="TMP461">
+                <resource type="thermal" unit="1" res_name="thermal-5" low_threshold="10" high_threshold="100"/>
+            </function>
+        </device>
+    </IPMB>
+
+    <IPMB bus="3">
+        <device name="psu-0-eeprom" slave="0x50">
+            <function type="eeprom" drv="EEPROM">
+                <resource type="eeprom" res_name="psu-0-eeprom" alen="1" offset="0xA0" dlen="96">
+                    <reference res_name="psu-0-present"/>
+                </resource>
+            </function>
+        </device>
+        <device type="eeprom" drv="EEPROM" name="psu-1-eeprom" slave="0x51">
+            <function type="eeprom" drv="EEPROM">
+                <resource type="eeprom" res_name="psu-1-eeprom" alen="1" offset="0xA0" dlen="96">
+                    <reference res_name="psu-1-present"/>
+                </resource>
+            </function>
+        </device>        
+        <device name="pmbus-0" slave="0x58">
+            <function type="psu" drv="PMBUS_PSU">
+                <resource type="psu" res_name="psu-0">
+                    <reference res_name="psu-0-eeprom"/>
+                    <reference res_name="psu-0-present"/>
+                    <reference res_name="psu-0-powergood"/>
+                </resource>
+            </function>
+            <function type="fan" drv="PMBUS_FAN">
+                <resource type="fan" unit="0" res_name="psu-fan-0" ctrl_type="RPM" fan_max_speed="13200" fan_def_speed="6600">
+                    <reference res_name="psu-0-present"/>
+                </resource>
+            </function>
+        </device>
+        <device name="pmbus-1" slave="0x59">
+            <function type="psu" drv="PMBUS_PSU">
+                <resource type="psu" res_name="psu-1">
+                    <reference res_name="psu-1-eeprom"/>
+                    <reference res_name="psu-1-present"/>
+                    <reference res_name="psu-1-powergood"/>
+                </resource>
+            </function>
+            <function type="fan" drv="PMBUS_FAN">
+                <resource type="fan" unit="0" res_name="psu-fan-1" ctrl_type="RPM" fan_max_speed="13200" fan_def_speed="6600">
+                    <reference res_name="psu-1-present"/>
+                </resource>
+            </function>
+        </device>          
+    </IPMB>
+
+</root>
