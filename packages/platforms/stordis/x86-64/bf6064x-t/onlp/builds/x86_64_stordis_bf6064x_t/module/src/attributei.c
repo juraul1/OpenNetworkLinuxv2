@@ -11,10 +11,10 @@ int
 onlp_attributei_onie_info_get(onlp_oid_t oid, onlp_onie_info_t* rp)
 {
     if(oid != ONLP_OID_CHASSIS) {
-        return ONLP_STATUS_E_UNSUPPORTED;
+	    return ONLP_STATUS_E_UNSUPPORTED;
     }
 
-    /*int id = ONLP_OID_ID_GET(oid);
+    int id = ONLP_OID_ID_GET(oid);
 
     dpapi_onie_info_t onie_info;
     if(dpapi_sys_onie_info_get(id-1, &onie_info) != ONLP_STATUS_OK)
@@ -23,16 +23,16 @@ onlp_attributei_onie_info_get(onlp_oid_t oid, onlp_onie_info_t* rp)
     }
 
     memcpy(rp, &onie_info, sizeof(onlp_onie_info_t));
-    */
 
-    return ONLP_STATUS_E_UNSUPPORTED;
+    return 0;
+    //return ONLP_STATUS_E_UNSUPPORTED;
 }
 
 int
 onlp_attributei_asset_info_get(onlp_oid_t oid, onlp_asset_info_t* rp)
 {
     if(oid != ONLP_OID_CHASSIS) {
-        return ONLP_STATUS_E_UNSUPPORTED;
+	    return ONLP_STATUS_E_UNSUPPORTED;
     }
 
     return ONLP_STATUS_E_UNSUPPORTED;
