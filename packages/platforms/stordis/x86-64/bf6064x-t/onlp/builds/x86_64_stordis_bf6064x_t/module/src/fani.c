@@ -24,6 +24,8 @@
 #include "dpapi/dpapi.h"
 #include "dpapi/dpapi_fan.h"
 
+#include "lock.h"
+
 enum onlp_fan_id
 {
     FAN_RESERVED = 0,
@@ -83,11 +85,16 @@ onlp_fani_hdr_get(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
     uint8_t present = 0;
     *hdr = onlp_fan_info[id].hdr;
     
-    if(dpapi_fan_is_present(id-1, &present) != ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    int rv = dpapi_fan_is_present(id-1, &present);
+    bf6064x_lock_release();
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
     
+
     if(present){
         ONLP_OID_STATUS_FLAG_SET(hdr, PRESENT);
     }
@@ -104,10 +111,16 @@ int
 onlp_fani_info_get(onlp_oid_t oid, onlp_fan_info_t* info)
 {
     int id = ONLP_OID_ID_GET(oid);
+    int rv;
     uint8_t present = 0;
     ONLP_OID_INFO_ASSIGN(id, onlp_fan_info, info);
 
-    if(dpapi_fan_is_present(id-1, &present) != ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    rv = dpapi_fan_is_present(id-1, &present);
+    bf6064x_lock_release();
+
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
@@ -121,10 +134,15 @@ onlp_fani_info_get(onlp_oid_t oid, onlp_fan_info_t* info)
         return ONLP_STATUS_OK;
     }
 
-    if(dpapi_fan_percentage_get(id-1, (uint16_t *)&info->percentage) != ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    rv = dpapi_fan_percentage_get(id-1, (uint16_t *)&info->percentage);
+    bf6064x_lock_release();
+    
+    if(rv != ONLP_STATUS_OK)
     {
         info->percentage = 0;
     }
+
 
     return ONLP_STATUS_OK;
 }
@@ -141,11 +159,16 @@ int
 onlp_fani_percentage_set(onlp_oid_t oid, int p)
 {
     int id = ONLP_OID_ID_GET(oid);
+    
+    bf6064x_lock_acquire();    
+    int rv = dpapi_fan_percentage_set(id-1, (uint16_t)p);
+    bf6064x_lock_release();
 
-    if(dpapi_fan_percentage_set(id-1, (uint16_t)p) != ONLP_STATUS_OK)
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
-
+    
+    
     return ONLP_STATUS_OK;
 }

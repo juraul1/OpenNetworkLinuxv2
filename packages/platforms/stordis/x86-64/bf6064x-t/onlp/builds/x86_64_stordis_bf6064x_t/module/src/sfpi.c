@@ -28,6 +28,9 @@
 #include "dpapi/dpapi.h"
 #include "dpapi/dpapi_sfp.h"
 
+#include "lock.h"
+
+
 int
 onlp_sfpi_type_get(onlp_oid_id_t oid, onlp_sfp_type_t* rtype)
 {
@@ -43,10 +46,17 @@ onlp_sfpi_bitmap_get(onlp_sfp_bitmap_t* bmap)
      */
     uint8_t p, max_ports;
 
-    if(dpapi_sfp_quantity_of_ports_get(&max_ports) != ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+
+    int rv = dpapi_sfp_quantity_of_ports_get(&max_ports);
+
+    bf6064x_lock_release();
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
+
 
     AIM_BITMAP_CLR_ALL(bmap);
 
@@ -68,7 +78,12 @@ onlp_sfpi_is_present(onlp_oid_id_t oid)
      */
     int id = ONLP_OID_ID_GET(oid);
     uint8_t present = 0;
+
+    bf6064x_lock_acquire();
+
     dpapi_sfp_is_present(id, &present);
+
+    bf6064x_lock_release();
 
     return present;
 }
@@ -78,18 +93,34 @@ onlp_sfpi_presence_bitmap_get(onlp_sfp_bitmap_t* dst)
 {
     uint8_t max_ports, index, *pbmap;
 
-    if(dpapi_sfp_quantity_of_ports_get(&max_ports) != ONLP_STATUS_OK)
+    int rv;
+
+    bf6064x_lock_acquire();
+
+    rv = dpapi_sfp_quantity_of_ports_get(&max_ports);
+    
+    bf6064x_lock_release();
+
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
 
     pbmap = (uint8_t *)calloc(1, sizeof(uint8_t) * max_ports);
 
-    if(dpapi_sfp_presence_bitmap_get(pbmap) != ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+
+    rv = dpapi_sfp_presence_bitmap_get(pbmap);
+
+    bf6064x_lock_release();
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
-    
+
+
     for(index = 0; index<max_ports; index++)
     {
         AIM_BITMAP_MOD(dst, index, pbmap[index]);
@@ -103,10 +134,19 @@ onlp_sfpi_dev_read(onlp_oid_id_t oid, int devaddr, int addr,
                    uint8_t* dst, int size)
 {
     int id = ONLP_OID_ID_GET(oid);
-    if(dpapi_sfp_eeprom_read(id, dst) != ONLP_STATUS_OK)
+
+    bf6064x_lock_acquire();
+
+    int rv = dpapi_sfp_eeprom_read(id, dst);
+    
+    bf6064x_lock_release();
+
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
+
     
     return ONLP_STATUS_OK;
 }
@@ -116,11 +156,19 @@ onlp_sfpi_dev_readb(onlp_oid_id_t oid, int devaddr, int addr)
 {
     int id = ONLP_OID_ID_GET(oid);
     uint8_t data = 0;
-    if(dpapi_sfp_eeprom_readb(id, addr, &data) != ONLP_STATUS_OK)
+
+    bf6064x_lock_acquire();
+
+    int rv = dpapi_sfp_eeprom_readb(id, addr, &data);
+    
+    bf6064x_lock_release();
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
-    
+
+
     return data;
 }
 
@@ -128,11 +176,19 @@ int
 onlp_sfpi_dev_writeb(onlp_oid_id_t oid, int devaddr, int addr, uint8_t value)
 {
     int id = ONLP_OID_ID_GET(oid);
-    if(dpapi_sfp_eeprom_writeb(id, addr, value) != ONLP_STATUS_OK)
+
+    bf6064x_lock_acquire();
+
+    int rv = dpapi_sfp_eeprom_writeb(id, addr, value);
+
+    bf6064x_lock_release();
+ 
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
     
+
     return ONLP_STATUS_OK;
 }
 /*
@@ -172,15 +228,28 @@ int onlp_sfpi_control_set(onlp_oid_id_t oid, onlp_sfp_control_t control, int val
 int onlp_sfpi_rx_los_bitmap_get(onlp_sfp_bitmap_t* dst)
 {
     uint8_t max_ports, index, *pbmap;
+    int rv;
 
-    if(dpapi_sfp_quantity_of_ports_get(&max_ports) != ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+
+    rv = dpapi_sfp_quantity_of_ports_get(&max_ports);
+
+    bf6064x_lock_release();
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
 
     pbmap = (uint8_t *)calloc(1, sizeof(uint8_t) * max_ports);
     
-    if(dpapi_sfp_rx_los_bitmap_get(pbmap) != ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+
+    rv = dpapi_sfp_rx_los_bitmap_get(pbmap);
+
+    bf6064x_lock_release();
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }

@@ -28,6 +28,8 @@
 #include "dpapi/dpapi.h"
 #include "dpapi/dpapi_thrml.h"
 
+#include "lock.h"
+
 #define THERMAL_INFO_ENTRY_INIT(_id, _desc)         \
     {                                               \
         {                                           \
@@ -75,7 +77,14 @@ onlp_thermali_info_get(onlp_oid_id_t oid, onlp_thermal_info_t* info)
     int id = ONLP_OID_ID_GET(oid);
     ONLP_OID_INFO_ASSIGN(id, onlp_thermal_info, info);
     /* ONLPv2 is 1 base, but DAPAI is 0 base */
-    if(dpapi_thrml_temp_get(id-1, &info->mcelsius) != ONLP_STATUS_OK)
+
+    bf6064x_lock_acquire();
+
+    int rv = dpapi_thrml_temp_get(id-1, &info->mcelsius);
+
+    bf6064x_lock_release();
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
