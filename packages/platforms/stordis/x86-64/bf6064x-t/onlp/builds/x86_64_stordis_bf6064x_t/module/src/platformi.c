@@ -29,6 +29,8 @@
 #include "dpapi/dpapi_init.h"
 #include "dpapi/dpapi_sfp.h"
 
+#include "lock.h"
+
 #include "x86_64_stordis_bf6064x_t_int.h"
 #include "x86_64_stordis_bf6064x_t_log.h"
 
@@ -48,13 +50,24 @@ onlp_platformi_sw_init(void)
         printf("dpapi_init failed!");
     }
 
+    bf6064x_lock_init();
+
+    int rv;
     for(port = 0; port < 64; port++)
     {
-        if(dpapi_sfp_control_set(port, DPAPI_SFP_CONTROL_LP_MODE, 0) != ONLP_STATUS_OK)
+        bf6064x_lock_acquire();
+        rv = dpapi_sfp_control_set(port, DPAPI_SFP_CONTROL_LP_MODE, 0);
+        bf6064x_lock_release();
+
+        if(rv != ONLP_STATUS_OK)
         {
             return ONLP_STATUS_E_INVALID;
         }
-        if(dpapi_sfp_control_set(port, DPAPI_SFP_CONTROL_RESET, 0) != ONLP_STATUS_OK)
+        bf6064x_lock_acquire();
+        rv = dpapi_sfp_control_set(port, DPAPI_SFP_CONTROL_RESET, 0);
+        bf6064x_lock_release();
+
+        if(rv != ONLP_STATUS_OK)
         {
             return ONLP_STATUS_E_INVALID;
         }

@@ -28,6 +28,9 @@
 #include "dpapi/dpapi.h"
 #include "dpapi/dpapi_sysled.h"
 
+#include "lock.h"
+
+
 enum onlp_led_id
 {
     LED_RESERVED = 0,
@@ -76,10 +79,16 @@ onlp_ledi_info_get(onlp_oid_t oid, onlp_led_info_t* info)
     int id = ONLP_OID_ID_GET(oid);
     ONLP_OID_INFO_ASSIGN(id, onlp_led_info, info);
 
-    if(dpapi_sysled_mode_get(id-1, (dpapi_led_mode_t *) &info->mode) != ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    int rv = dpapi_sysled_mode_get(id-1, (dpapi_led_mode_t *) &info->mode);
+    bf6064x_lock_release();
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
+
+    
 
     return ONLP_STATUS_OK;
 }
@@ -89,10 +98,16 @@ onlp_ledi_mode_set(onlp_oid_t oid, onlp_led_mode_t mode)
 {
     int id = ONLP_OID_ID_GET(oid);
 
-    if (dpapi_sysled_mode_set(id-1, mode) != ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    int rv = dpapi_sysled_mode_set(id-1, mode);
+    bf6064x_lock_release();
+
+    if (rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INTERNAL;
     }
+
+    
 
     return ONLP_STATUS_OK;
 }
