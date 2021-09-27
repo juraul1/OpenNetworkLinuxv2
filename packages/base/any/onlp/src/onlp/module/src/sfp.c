@@ -30,6 +30,9 @@
 #include "onlp_int.h"
 #include <IOF/iof.h>
 
+#include <string>
+#include <stdint.h>
+
 /**
  * All port numbers will be validated before calling the SFP driver.
  */
@@ -667,3 +670,309 @@ onlp_sfp_info_from_json(cJSON* cj, onlp_sfp_info_t* info)
 {
     return 0;
 }
+
+
+
+/* I2C port mapping for BF6064X-T */
+int
+onlp_i2c_mux_mapping(onlp_oid_t oid, int port_number, int reset)
+{
+    // Check if reset = 0 (do the mapping) or 1 (reset the registers). Exit otherwise
+    if (reset != 0 && reset != 1) {
+        AIM_LOG_ERROR("reset can only be 1 (reset) or 0 (mapping)");
+        return 0;
+    }
+
+    uint8_t channel_cpu; // cpu channel number from hardware specification
+    uint8_t channel_mb; // mb channel number from hardware specification
+    uint8_t cpu_mux_address;
+    uint8_t mb_mux_address;
+    cpu_mux_address = 0x70; //CPU MUX address from hardware specification
+
+    if (port_number > 0 && port_number <= 32) {
+        channel_cpu = 0x4;
+    } else if (port_number >= 33 && port_number <= 64) {
+        channel_cpu = 0x40;
+    } else {
+        AIM_LOG_ERROR("i2c_mux_mapping: Port number %d is out of limits", port_number);
+    }
+
+    // Select CPU MUX
+    int rv;
+    if(ONLP_FAILURE(rv = onlp_sfp_dev_writeb(oid, cpu_mux_address, 0, channel_cpu))) {
+        AIM_LOG_ERROR("%{onlp_oid}: onlp_i2c_mux: sfp_dev_wrtie(0x70) failed: %{onlp_status}",
+                      oid, rv);
+        return rv;
+    }
+
+    switch (port_number) {
+        case 1:
+            mb_mux_address = 0x74;
+            channel_mb = 0x01;
+            break;
+        case 33:
+            mb_mux_address = 0x74;
+            channel_mb = 0x01;
+            break;
+        case 2:
+            mb_mux_address = 0x74;
+            channel_mb = 0x02;
+            break;
+        case 34:
+            mb_mux_address = 0x74;
+            channel_mb = 0x02;
+            break;
+        case 3:
+            mb_mux_address = 0x74;
+            channel_mb = 0x04;
+            break;
+        case 35:
+            mb_mux_address = 0x74;
+            channel_mb = 0x04;
+            break;
+        case 4:
+            mb_mux_address = 0x74;
+            channel_mb = 0x08;
+            break;
+        case 36:
+            mb_mux_address = 0x74;
+            channel_mb = 0x08;
+            break;
+        case 5:
+            mb_mux_address = 0x74;
+            channel_mb = 0x10;
+            break;
+        case 37:
+            mb_mux_address = 0x74;
+            channel_mb = 0x10;
+            break;
+        case 6:
+            mb_mux_address = 0x74;
+            channel_mb = 0x20;
+            break;
+        case 38:
+            mb_mux_address = 0x74;
+            channel_mb = 0x20;
+            break;
+        case 7:
+            mb_mux_address = 0x74;
+            channel_mb = 0x40;
+            break;
+        case 39:
+            mb_mux_address = 0x74;
+            channel_mb = 0x40;
+            break;
+        case 8:
+            mb_mux_address = 0x74;
+            channel_mb = 0x80;
+            break;
+        case 40:
+            mb_mux_address = 0x74;
+            channel_mb = 0x80;
+            break;
+        case 14:
+            mb_mux_address = 0x75;
+            channel_mb = 0x01;
+            break;
+        case 47:
+            mb_mux_address = 0x75;
+            channel_mb = 0x01;
+            break;
+        case 13:
+            mb_mux_address = 0x75;
+            channel_mb = 0x02;
+            break;
+        case 48:
+            mb_mux_address = 0x75;
+            channel_mb = 0x02;
+            break;
+        case 16:
+            mb_mux_address = 0x75;
+            channel_mb = 0x04;
+            break;
+        case 41:
+            mb_mux_address = 0x75;
+            channel_mb = 0x04;
+            break;
+        case 15:
+            mb_mux_address = 0x75;
+            channel_mb = 0x08;
+            break;
+        case 42:
+            mb_mux_address = 0x75;
+            channel_mb = 0x08;
+            break;
+        case 10:
+            mb_mux_address = 0x75;
+            channel_mb = 0x10;
+            break;
+        case 43:
+            mb_mux_address = 0x75;
+            channel_mb = 0x10;
+            break;
+        case 9:
+            mb_mux_address = 0x75;
+            channel_mb = 0x20;
+            break;
+        case 44:
+            mb_mux_address = 0x75;
+            channel_mb = 0x20;
+            break;
+        case 12:
+            mb_mux_address = 0x75;
+            channel_mb = 0x40;
+            break;
+        case 45:
+            mb_mux_address = 0x75;
+            channel_mb = 0x40;
+            break;
+        case 11:
+            mb_mux_address = 0x75;
+            channel_mb = 0x80;
+            break;
+        case 46:
+            mb_mux_address = 0x75;
+            channel_mb = 0x80;
+            break;
+        case 17:
+            mb_mux_address = 0x76;
+            channel_mb = 0x01;
+            break;
+        case 55:
+            mb_mux_address = 0x76;
+            channel_mb = 0x01;
+            break;
+        case 18:
+            mb_mux_address = 0x76;
+            channel_mb = 0x02;
+            break;
+        case 56:
+            mb_mux_address = 0x76;
+            channel_mb = 0x02;
+            break;
+        case 26:
+            mb_mux_address = 0x76;
+            channel_mb = 0x04;
+            break;
+        case 53:
+            mb_mux_address = 0x76;
+            channel_mb = 0x04;
+            break;
+        case 25:
+            mb_mux_address = 0x76;
+            channel_mb = 0x08;
+            break;
+        case 54:
+            mb_mux_address = 0x76;
+            channel_mb = 0x08;
+            break;
+        case 22:
+            mb_mux_address = 0x76;
+            channel_mb = 0x10;
+            break;
+        case 58:
+            mb_mux_address = 0x76;
+            channel_mb = 0x10;
+            break;
+        case 21:
+            mb_mux_address = 0x76;
+            channel_mb = 0x20;
+            break;
+        case 57:
+            mb_mux_address = 0x76;
+            channel_mb = 0x20;
+            break;
+        case 24:
+            mb_mux_address = 0x76;
+            channel_mb = 0x40;
+            break;
+        case 49:
+            mb_mux_address = 0x76;
+            channel_mb = 0x40;
+            break;
+        case 23:
+            mb_mux_address = 0x76;
+            channel_mb = 0x80;
+            break;
+        case 50:
+            mb_mux_address = 0x76;
+            channel_mb = 0x80;
+            break;
+        case 29:
+            mb_mux_address = 0x77;
+            channel_mb = 0x01;
+            break;
+        case 59:
+            mb_mux_address = 0x77;
+            channel_mb = 0x01;
+            break;
+        case 30:
+            mb_mux_address = 0x77;
+            channel_mb = 0x02;
+            break;
+        case 60:
+            mb_mux_address = 0x77;
+            channel_mb = 0x02;
+            break;
+        case 27:
+            mb_mux_address = 0x77;
+            channel_mb = 0x04;
+            break;
+        case 61:
+            mb_mux_address = 0x77;
+            channel_mb = 0x04;
+            break;
+        case 28:
+            mb_mux_address = 0x77;
+            channel_mb = 0x08;
+            break;
+        case 62:
+            mb_mux_address = 0x77;
+            channel_mb = 0x08;
+            break;
+        case 32:
+            mb_mux_address = 0x77;
+            channel_mb = 0x10;
+            break;
+        case 63:
+            mb_mux_address = 0x77;
+            channel_mb = 0x10;
+            break;
+        case 31:
+            mb_mux_address = 0x77;
+            channel_mb = 0x20;
+            break;
+        case 64:
+            mb_mux_address = 0x77;
+            channel_mb = 0x20;
+            break;
+        case 19:
+            mb_mux_address = 0x77;
+            channel_mb = 0x40;
+            break;
+        case 52:
+            mb_mux_address = 0x77;
+            channel_mb = 0x40;
+            break;
+        case 20:
+            mb_mux_address = 0x77;
+            channel_mb = 0x80;
+            break;
+        default: //or case 51:
+            mb_mux_address = 0x77;
+            channel_mb = 0x80;
+            break;
+    }
+
+    // Select or deselect MB MUX
+    if (reset == 0) {
+        return onlp_sfp_dev_writeb(oid, mb_mux_address, 0, channel_mb);
+    } else {
+	if(ONLP_FAILURE(rv = onlp_sfp_dev_writeb(oid, mb_mux_address, 0, 0x0))) {
+            AIM_LOG_ERROR("%{onlp_oid}: onlp_i2c_mux_mapping: sfp_dev_writeb(mb_mux_address) failed: %{onlp_status}", oid, rv);
+            return rv;
+	}
+	return onlp_sfp_dev_writeb(oid, cpu_mux_address, 0, 0x0)
+    }
+}
+

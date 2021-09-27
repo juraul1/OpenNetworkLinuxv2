@@ -381,6 +381,9 @@ int onlp_sfp_hw_denit(void);
  */
 int onlp_sfp_inventory_show(aim_pvs_t* pvs);
 
+
+
+int onlp_i2c_mux_mapping(onlp_oid_t oid, int port_number, int reset);
 /******************************************************************************
  *
  * Enumeration Support Definitions.
