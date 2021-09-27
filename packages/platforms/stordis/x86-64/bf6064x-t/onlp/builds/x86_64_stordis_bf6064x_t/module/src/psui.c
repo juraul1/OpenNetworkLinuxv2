@@ -28,6 +28,9 @@
 #include "dpapi/dpapi.h"
 #include "dpapi/dpapi_psu.h"
 
+#include "lock.h"
+
+
 #define PSU_INFO_ENTRY_INIT(_id, _desc)    \
     {                                      \
         {                                  \
@@ -60,10 +63,15 @@ onlp_psui_hdr_get(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
     uint8_t present = 0;
     *hdr = onlp_psu_info[id].hdr;
 
-    if(dpapi_psu_is_present(id-1, &present) != ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    int rv = dpapi_psu_is_present(id-1, &present);
+    bf6064x_lock_release();
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
+
     
     if(present){
         ONLP_OID_STATUS_FLAG_SET(hdr, PRESENT);
@@ -86,7 +94,13 @@ onlp_psui_info_get(onlp_oid_t oid, onlp_psu_info_t* info)
 
     ONLP_OID_INFO_ASSIGN(id, onlp_psu_info, info);
 
-    if(dpapi_psu_is_present(id-1, &present) != ONLP_STATUS_OK)
+    int rv;
+
+    bf6064x_lock_acquire();
+    rv = dpapi_psu_is_present(id-1, &present);
+    bf6064x_lock_release();
+
+    if(rv != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
     }
@@ -100,30 +114,50 @@ onlp_psui_info_get(onlp_oid_t oid, onlp_psu_info_t* info)
         return ONLP_STATUS_OK;
     }
 
-    if(dpapi_psu_model_get(id-1, &model) == ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    rv = dpapi_psu_model_get(id-1, &model);
+    bf6064x_lock_release();
+
+    if(rv == ONLP_STATUS_OK)
     {
         strcpy(info->model, model);
     }
 
-    if(dpapi_psu_serial_get(id-1, &serial) == ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    rv = dpapi_psu_serial_get(id-1, &serial);
+    bf6064x_lock_release();
+
+    if(rv == ONLP_STATUS_OK)
     {
         strcpy(info->serial, serial);
     }
 
-    if(dpapi_psu_volt_get(id-1,  &mvout) == ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    rv = dpapi_psu_volt_get(id-1,  &mvout);
+    bf6064x_lock_release();
+
+    if(rv == ONLP_STATUS_OK)
     {
         info->mvout = mvout;
     }
 
-    if(dpapi_psu_amp_get(id-1,  &miout) == ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    rv = dpapi_psu_amp_get(id-1,  &miout);
+    bf6064x_lock_release();
+
+    if(rv == ONLP_STATUS_OK)
     {
         info->miout = miout;
     }
 
-    if(dpapi_psu_watt_get(id-1,  &mpout) == ONLP_STATUS_OK)
+    bf6064x_lock_acquire();
+    rv = dpapi_psu_watt_get(id-1,  &mpout);
+    bf6064x_lock_release();
+
+    if(rv == ONLP_STATUS_OK)
     {
         info->mpout = mpout;
     }
-    
+
     return ONLP_STATUS_OK;
 }
