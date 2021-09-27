@@ -621,18 +621,11 @@ onlp_i2c_mux_mapping(int port_number, int reset)
         AIM_LOG_ERROR("i2c_mux_mapping: Port number %d is out of limits", port_number);
     }
 
-    // Select or deselect CPU MUX
+    // Select CPU MUX
     int rv;
-    if (reset == 0) {
-        rv = onlp_i2c_mux_select(&cpu_mux, channel_cpu);
-        if(rv < 0) {
-            return rv;
-        }
-    } else { // reset = 1
-        rv = onlp_i2c_mux_deselect(&cpu_mux);
-        if(rv < 0) {
-            return rv;
-        }
+    rv = onlp_i2c_mux_select(&cpu_mux, channel_cpu);
+    if(rv < 0) {
+        return rv;
     }
 
     switch (port_number) {
@@ -898,9 +891,14 @@ onlp_i2c_mux_mapping(int port_number, int reset)
     if (reset == 0) {
         return onlp_i2c_mux_select(&mb_mux, channel_mb);
     } else {
-        return onlp_i2c_mux_deselect(&mb_mux);
+        rv = onlp_i2c_mux_deselect(&mb_mux);
+        if (rv < 0) {
+             return rv;
+        }
+        return onlp_i2c_mux_deselect(&cpu_mux);
     }
 }
+
 
 
 #endif /* ONLPLIB_CONFIG_INCLUDE_I2C */
