@@ -37,6 +37,17 @@ onlp_sfpi_type_get(onlp_oid_id_t oid, onlp_sfp_type_t* rtype)
     uint8_t buffer[256];
     int id = ONLP_OID_ID_GET(oid);
 
+    uint8_t present = 0;
+    if (dpapi_sfp_is_present(id, &present) != ONLP_STATUS_OK)
+    {
+        return ONLP_STATUS_E_INVALID;
+    }
+
+    if (!present) 
+    {
+        return ONLP_STATUS_E_MISSING;
+    }
+
     if(dpapi_sfp_eeprom_read(id, buffer) != ONLP_STATUS_OK)
     {
         return ONLP_STATUS_E_INVALID;
