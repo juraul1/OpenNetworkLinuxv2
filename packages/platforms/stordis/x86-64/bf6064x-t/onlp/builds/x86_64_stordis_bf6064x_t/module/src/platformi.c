@@ -46,6 +46,10 @@ onlp_platformi_sw_init(void)
 {
     int port;
 
+    if (dpapi_log_quiet_set(1) != 0) {
+        printf("Unable to make libdpapi quiet!\n");
+    }
+
     if(dpapi_init() != ONLP_STATUS_OK){
         printf("dpapi_init failed!");
     }
