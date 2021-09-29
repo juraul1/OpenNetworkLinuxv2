@@ -30,7 +30,6 @@
 #include "onlp_int.h"
 #include <IOF/iof.h>
 
-#include <string>
 #include <stdint.h>
 
 /**
