@@ -34,7 +34,22 @@
 int
 onlp_sfpi_type_get(onlp_oid_id_t oid, onlp_sfp_type_t* rtype)
 {
-    *rtype = ONLP_SFP_TYPE_QSFP28;
+    uint8_t buffer[256];
+    int id = ONLP_OID_ID_GET(oid);
+
+    if(dpapi_sfp_eeprom_read(id, buffer) != ONLP_STATUS_OK)
+    {
+        return ONLP_STATUS_E_INVALID;
+    }
+
+    sff_eeprom_t eeprom;
+    memset(&eeprom, 0, sizeof(eeprom));
+
+    if (sff_eeprom_parse(&eeprom, buffer) != 0)
+    {
+        return ONLP_STATUS_E_INVALID;
+    }
+    rtype = eeprom.info.sfp_type;
     return 0;
 }
 
