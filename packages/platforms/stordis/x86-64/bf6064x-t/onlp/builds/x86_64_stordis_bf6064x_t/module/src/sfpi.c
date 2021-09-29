@@ -28,6 +28,9 @@
 #include "dpapi/dpapi.h"
 #include "dpapi/dpapi_sfp.h"
 
+#include <sff/sff.h>
+#include <sff/dom.h>
+
 #include "lock.h"
 
 
