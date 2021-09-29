@@ -24,4 +24,4 @@
 PLATFORM := x86-64-stordis-bf6064x-t
 include $(ONL)/packages/base/any/onlp/builds/platform/libonlp-platform.mk
 LIBDPAPI := $(ONL)/packages/platforms/stordis/x86-64/dpapi/libdpapi.a
-GLOBAL_LINK_LIBS += $(LIBDPAPI) -ldl
+GLOBAL_LINK_LIBS += $(LIBDPAPI) -ldl -lz
