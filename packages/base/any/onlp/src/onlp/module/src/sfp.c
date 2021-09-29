@@ -971,7 +971,7 @@ onlp_i2c_mux_mapping(onlp_oid_t oid, int port_number, int reset)
             AIM_LOG_ERROR("%{onlp_oid}: onlp_i2c_mux_mapping: sfp_dev_writeb(mb_mux_address) failed: %{onlp_status}", oid, rv);
             return rv;
 	}
-	return onlp_sfp_dev_writeb(oid, cpu_mux_address, 0, 0x0)
+	return onlp_sfp_dev_writeb(oid, cpu_mux_address, 0, 0x0);
     }
 }
 
