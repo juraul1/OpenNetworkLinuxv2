@@ -28,13 +28,46 @@
 #include "dpapi/dpapi.h"
 #include "dpapi/dpapi_sfp.h"
 
+#include <sff/sff.h>
+#include <sff/dom.h>
+
 #include "lock.h"
 
 
 int
 onlp_sfpi_type_get(onlp_oid_id_t oid, onlp_sfp_type_t* rtype)
 {
-    *rtype = ONLP_SFP_TYPE_QSFP28;
+    uint8_t buffer[256];
+    int id = ONLP_OID_ID_GET(oid);
+
+    bf6064x_lock_acquire();
+    
+    uint8_t present = 0;
+    if (dpapi_sfp_is_present(id, &present) != ONLP_STATUS_OK)
+    {
+        return ONLP_STATUS_E_INVALID;
+    }
+
+    if (!present) 
+    {
+        return ONLP_STATUS_E_MISSING;
+    }
+
+    if(dpapi_sfp_eeprom_read(id, buffer) != ONLP_STATUS_OK)
+    {
+        return ONLP_STATUS_E_INVALID;
+    }
+
+    bf6064x_lock_release();
+    
+    sff_eeprom_t eeprom;
+    memset(&eeprom, 0, sizeof(eeprom));
+    
+    if (sff_eeprom_parse(&eeprom, buffer) != 0)
+    {
+        return ONLP_STATUS_E_INVALID;
+    }
+    *rtype = eeprom.info.sfp_type;
     return 0;
 }
 
