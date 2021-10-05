@@ -591,5 +591,414 @@ onlp_i2c_mux_driver_t onlp_i2c_mux_driver_pca9548 =
         },
     };
 
+/* I2C port mapping for BF6064X-T */
+int
+onlp_i2c_mux_mapping(int port_number, int reset)
+{
+    // Check if reset = 0 (do the mapping) or 1 (reset the registers). Exit otherwise
+    if (reset != 0 && reset != 1) {
+        AIM_LOG_ERROR("reset can only be 1 (reset) or 0 (mapping)");
+        return 0;
+    }
+
+    int channel_cpu; // cpu channel number from hardware specification
+    int channel_mb; // mb channel number from hardware specification
+    onlp_i2c_mux_device_t cpu_mux;
+    onlp_i2c_mux_device_t mb_mux;
+    cpu_mux.name = "CPU MUX";
+    cpu_mux.bus = 0;
+    cpu_mux.devaddr = 0x70; //CPU MUX address from hardware specification
+    cpu_mux.driver = &onlp_i2c_mux_driver_pca9548; //Driver for BF6064X switch
+    mb_mux.name = "MB MUX";
+    mb_mux.bus = 0;
+    mb_mux.driver = &onlp_i2c_mux_driver_pca9548; //For BF6064X switch
+
+    if (port_number > 0 && port_number <= 32) {
+        channel_cpu = 2;
+    } else if (port_number >= 33 && port_number <= 64) {
+        channel_cpu = 6;
+    } else {
+        AIM_LOG_ERROR("i2c_mux_mapping: Port number %d is out of limits", port_number);
+    }
+
+    // Select CPU MUX
+    int rv;
+    rv = onlp_i2c_mux_select(&cpu_mux, channel_cpu);
+    if(rv < 0) {
+        return rv;
+    }
+
+    switch (port_number) {
+        case 1:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 0;
+            break;
+        case 33:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 0;
+            break;
+        case 2:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 1;
+            break;
+        case 34:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 1;
+            break;
+        case 3:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 2;
+            break;
+        case 35:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 2;
+            break;
+        case 4:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 3;
+            break;
+        case 36:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 3;
+            break;
+        case 5:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 4;
+            break;
+        case 37:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 4;
+            break;
+        case 6:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 5;
+            break;
+        case 38:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 5;
+            break;
+        case 7:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 6;
+            break;
+        case 39:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 6;
+            break;
+        case 8:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 7;
+            break;
+        case 40:
+            mb_mux.devaddr = 0x74;
+            channel_mb = 7;
+            break;
+        case 14:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 0;
+            break;
+        case 47:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 0;
+            break;
+        case 13:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 1;
+            break;
+        case 48:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 1;
+            break;
+        case 16:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 2;
+            break;
+        case 41:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 2;
+            break;
+        case 15:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 3;
+            break;
+        case 42:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 3;
+            break;
+        case 10:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 4;
+            break;
+        case 43:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 4;
+            break;
+        case 9:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 5;
+            break;
+        case 44:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 5;
+            break;
+        case 12:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 6;
+            break;
+        case 45:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 6;
+            break;
+        case 11:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 7;
+            break;
+        case 46:
+            mb_mux.devaddr = 0x75;
+            channel_mb = 7;
+            break;
+        case 17:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 0;
+            break;
+        case 55:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 0;
+            break;
+        case 18:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 1;
+            break;
+        case 56:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 1;
+            break;
+        case 26:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 2;
+            break;
+        case 53:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 2;
+            break;
+        case 25:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 3;
+            break;
+        case 54:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 3;
+            break;
+        case 22:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 4;
+            break;
+        case 58:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 4;
+            break;
+        case 21:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 5;
+            break;
+        case 57:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 5;
+            break;
+        case 24:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 6;
+            break;
+        case 49:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 6;
+            break;
+        case 23:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 7;
+            break;
+        case 50:
+            mb_mux.devaddr = 0x76;
+            channel_mb = 7;
+            break;
+        case 29:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 0;
+            break;
+        case 59:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 0;
+            break;
+        case 30:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 1;
+            break;
+        case 60:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 1;
+            break;
+        case 27:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 2;
+            break;
+        case 61:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 2;
+            break;
+        case 28:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 3;
+            break;
+        case 62:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 3;
+            break;
+        case 32:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 4;
+            break;
+        case 63:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 4;
+            break;
+        case 31:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 5;
+            break;
+        case 64:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 5;
+            break;
+        case 19:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 6;
+            break;
+        case 52:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 6;
+            break;
+        case 20:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 7;
+            break;
+        default: //or case 51:
+            mb_mux.devaddr = 0x77;
+            channel_mb = 7;
+            break;
+    }
+
+    // Select or deselect MB MUX
+    if (reset == 0) {
+        return onlp_i2c_mux_select(&mb_mux, channel_mb);
+    } else {
+        rv = onlp_i2c_mux_deselect(&mb_mux);
+        if (rv < 0) {
+             return rv;
+        }
+        return onlp_i2c_mux_deselect(&cpu_mux);
+    }
+}
+
+int set_sfp_frequency(int port_number, int frequency) 
+{
+
+    bf6064x_lock_acquire();
+
+    int rv;
+    rv = onlp_i2c_mux_mapping(port_number, 0);
+    if (rv < 0) {
+            AIM_LOG_ERROR("Mapping error for port number %d", port_number); 
+	    return rv;
+    }
+    
+    uint8_t result;
+    result = onlp_i2c_readb(0, 0x50, 0x00, 0);
+    if (result != 0x03) {
+	    fprintf( stderr, "Error: This is not an SFP or SFP+.\n");
+	    onlp_i2c_mux_mapping(port_number, 1);
+	    return -1;
+    }
+
+    // Change the page register on slave 0x51 to access page 2
+    uint8_t res;
+    rv = onlp_i2c_writeb(0,0x51,0x7f,0x2,0);
+    if (rv < 0) {
+            AIM_LOG_ERROR("onlp_i2c_writeb() to access page 2 failed: %d",rv);
+            onlp_i2c_mux_mapping(port_number, 1);
+	    return rv;
+    }
+
+    res = onlp_i2c_readb(0, 0x51, 0x7f,0);
+    if (res != 0x02) {
+	    fprintf(stderr, "Error: Can not change the page, the SFP+ is not tunable.\n");
+	    onlp_i2c_mux_mapping(port_number, 1);
+	    return -1;
+    }
+
+    // Retrieve Grid spacing value
+    uint16_t grid_spacing_hexa; // Need 2 bytes.
+    int grid_spacing;
+    grid_spacing_hexa = ((onlp_i2c_readb(0,0x51,0x8C,0) << 8) | onlp_i2c_readb(0,0x51,0x8D,0));
+    grid_spacing = grid_spacing_hexa * 0.1 * 1000000000; //value in Hz
+    if (grid_spacing == 0) {
+            fprintf(stderr, "grid_spacing=0, page not changed.\n");
+            onlp_i2c_mux_mapping(port_number, 1);
+            return -1;
+    }
+
+    // Retrieve First frequency
+    uint16_t first_frequency_THz;
+    uint16_t first_frequency_GHz;
+    int first_frequency;
+    first_frequency_THz = ((onlp_i2c_readb(0,0x51,0x84,0) << 8) | onlp_i2c_readb(0,0x51,0x85,0));
+    first_frequency_GHz = ((onlp_i2c_readb(0,0x51,0x86,0) << 8) | onlp_i2c_readb(0,0x51,0x87,0));
+    first_frequency = (first_frequency_THz * 1000000000000) + (first_frequency_GHz * 0.1 * 1000000000); //value in Hz
+    if (first_frequency == 0) {
+            fprintf(stderr, "first_frequency=0, page not changed.\n");
+            onlp_i2c_mux_mapping(port_number, 1);
+            return -1;
+    }
+
+    if (frequency == 0) {
+	    fprintf(stderr, "frequency=0.\n");
+	    onlp_i2c_mux_mapping(port_number, 1);
+            return -1;
+    }
+
+    // Desired channel number
+    uint8_t channel_number;
+    channel_number = 1 + ((frequency - first_frequency)/grid_spacing); // Formula from SFF-8690 document
+
+    // Change the channel number of the SFP
+    rv = onlp_i2c_writeb(0,0x51,0x91,channel_number,0);
+    if (rv < 0) {
+            AIM_LOG_ERROR("onlp_i2c_writeb() for channel_number failed: %d",rv);
+            onlp_i2c_mux_mapping(port_number, 1);
+	    return rv;
+    }
+    
+    // Check if it has been done correctly
+    uint8_t resu;
+    resu = onlp_i2c_readb(0,0x51,0x91,0);
+    if (resu != channel_number) {
+	    fprintf(stderr, "Error: Cannot write the desired frequency.\n");
+	    onlp_i2c_mux_mapping(port_number, 1);
+            return -1;
+    }
+
+    // Put the page register back to 1
+    rv = onlp_i2c_writeb(0,0x51,0x7f,0x01,0);
+    if (rv < 0) {
+            AIM_LOG_ERROR("onlp_i2c_writeb() for page back to 0x0 failed: %d",rv);
+            onlp_i2c_mux_mapping(port_number, 1);
+            return rv;
+    }
+
+    onlp_i2c_mux_mapping(port_number, 1);
+
+    bf6064x_lock_release();
+
+    return 1;
+}
 
 #endif /* ONLPLIB_CONFIG_INCLUDE_I2C */

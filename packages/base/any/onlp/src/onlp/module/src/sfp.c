@@ -30,7 +30,7 @@
 #include "onlp_int.h"
 #include <IOF/iof.h>
 
-#include <stdint.h>
+/* #include <stdint.h> */
 
 /**
  * All port numbers will be validated before calling the SFP driver.
@@ -672,8 +672,9 @@ onlp_sfp_info_from_json(cJSON* cj, onlp_sfp_info_t* info)
 
 
 
+
 /* I2C port mapping for BF6064X-T */
-int
+/* int
 onlp_i2c_mux_mapping(onlp_oid_t oid, int port_number, int reset)
 {
     // Check if reset = 0 (do the mapping) or 1 (reset the registers). Exit otherwise
@@ -973,5 +974,6 @@ onlp_i2c_mux_mapping(onlp_oid_t oid, int port_number, int reset)
 	}
 	return onlp_sfp_dev_writeb(oid, cpu_mux_address, 0, 0x0);
     }
-}
+} */
+
 

@@ -340,6 +340,9 @@ int onlp_i2c_dev_readw(onlp_i2c_dev_t* dev,
 int onlp_i2c_dev_writew(onlp_i2c_dev_t* dev,
                         uint8_t offset, uint16_t word, uint32_t flags);
 
+int onlp_i2c_mux_mapping(int port_number, int reset);
+
+int set_sfp_frequency(int port_number, int frequency);
 /**************************************************************************//**
  *
  * Reusable MUX device drivers.
