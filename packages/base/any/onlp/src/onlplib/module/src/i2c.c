@@ -42,7 +42,7 @@
 #include <onlp/onlp.h>
 #include "onlplib_log.h"
 
-#include <onlp/platformi/lock.h>
+#include "../../../../../../../platforms/stordis/x86-64/bf6064x-t/onlp/builds/x86_64_stordis_bf6064x_t/module/src/lock.h"
 
 int
 onlp_i2c_open(int bus, uint8_t addr, uint32_t flags)
