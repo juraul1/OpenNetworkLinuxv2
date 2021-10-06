@@ -42,7 +42,7 @@
 #include <onlp/onlp.h>
 #include "onlplib_log.h"
 
-#include "lock.h"
+#include <onlp/platformi/lock.h>
 
 int
 onlp_i2c_open(int bus, uint8_t addr, uint32_t flags)
