@@ -122,7 +122,7 @@ onlp_sfpi_is_present(onlp_oid_id_t oid)
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
-        printf("onlp_sfpi_is_present: Error acquiring lock\n");
+        printf("onlp_sfpi_is_present[id=%d]: Error acquiring lock\n", id);
     }
 
     dpapi_sfp_is_present(id, &present);
