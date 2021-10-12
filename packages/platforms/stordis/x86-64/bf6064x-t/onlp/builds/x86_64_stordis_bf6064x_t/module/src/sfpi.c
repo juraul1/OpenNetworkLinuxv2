@@ -47,7 +47,7 @@ onlp_sfpi_type_get(onlp_oid_id_t oid, onlp_sfp_type_t* rtype)
 
     
 
-    bf6064x_lock_acquire()
+    bf6064x_lock_acquire();
 
     uint8_t present = 0;
     if (dpapi_sfp_is_present(id, &present) != ONLP_STATUS_OK)
