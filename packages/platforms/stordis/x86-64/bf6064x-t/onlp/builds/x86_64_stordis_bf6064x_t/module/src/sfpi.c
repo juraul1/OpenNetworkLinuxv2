@@ -69,15 +69,16 @@ onlp_sfpi_type_get(onlp_oid_id_t oid, onlp_sfp_type_t* rtype)
     bf6064x_lock_release();
 
 
+    if (!err) {
+        sff_eeprom_t eeprom;
+        memset(&eeprom, 0, sizeof(eeprom));
 
-    sff_eeprom_t eeprom;
-    memset(&eeprom, 0, sizeof(eeprom));
-
-    if (sff_eeprom_parse(&eeprom, buffer) != 0)
-    {
-        err = ONLP_STATUS_E_INVALID;
+        if (sff_eeprom_parse(&eeprom, buffer) != 0)
+        {
+            err = ONLP_STATUS_E_INVALID;
+        }
+        *rtype = eeprom.info.sfp_type;
     }
-    *rtype = eeprom.info.sfp_type;
     return err;
 }
 
