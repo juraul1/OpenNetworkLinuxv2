@@ -42,7 +42,7 @@ onlp_sfpi_type_get(onlp_oid_id_t oid, onlp_sfp_type_t* rtype)
 
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK) {
-        printf('onlp_sfpi_type_get: Error acquiring lock\n');
+        printf("onlp_sfpi_type_get: Error acquiring lock\n");
     }
 
     uint8_t present = 0;
@@ -85,7 +85,7 @@ onlp_sfpi_bitmap_get(onlp_sfp_bitmap_t* bmap)
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
-        printf('onlp_sfpi_bitmap_get: Error acquiring lock\n');
+        printf("onlp_sfpi_bitmap_get: Error acquiring lock\n");
     }
 
     int rv = dpapi_sfp_quantity_of_ports_get(&max_ports);
@@ -142,7 +142,7 @@ onlp_sfpi_presence_bitmap_get(onlp_sfp_bitmap_t* dst)
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
-        printf('onlp_sfpi_presence_bitmap_get[quantity_of_ports_get]: Error acquiring lock\n');
+        printf("onlp_sfpi_presence_bitmap_get[quantity_of_ports_get]: Error acquiring lock\n");
     }
 
     rv = dpapi_sfp_quantity_of_ports_get(&max_ports);
@@ -160,7 +160,7 @@ onlp_sfpi_presence_bitmap_get(onlp_sfp_bitmap_t* dst)
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
-        printf('onlp_sfpi_presence_bitmap_get[presence_bitmap_get]: Error acquiring lock\n');
+        printf("onlp_sfpi_presence_bitmap_get[presence_bitmap_get]: Error acquiring lock\n");
     }
 
     rv = dpapi_sfp_presence_bitmap_get(pbmap);
@@ -190,7 +190,7 @@ onlp_sfpi_dev_read(onlp_oid_id_t oid, int devaddr, int addr,
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
-        printf('onlp_sfpi_dev_read: Error acquiring lock\n');
+        printf("onlp_sfpi_dev_read: Error acquiring lock\n");
     }
 
     int rv = dpapi_sfp_eeprom_read(id, dst);
@@ -216,7 +216,7 @@ onlp_sfpi_dev_readb(onlp_oid_id_t oid, int devaddr, int addr)
     int rv;
     if ((rv = onlp_sfpi_dev_readb()) != SLOCK_ERROR_OK)
     {
-        printf('onlp_sfpi_type_get: Error acquiring lock\n');
+        printf("onlp_sfpi_type_get: Error acquiring lock\n");
     }
 
     int rv = dpapi_sfp_eeprom_readb(id, addr, &data);
@@ -240,7 +240,7 @@ onlp_sfpi_dev_writeb(onlp_oid_id_t oid, int devaddr, int addr, uint8_t value)
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
-        printf('onlp_sfpi_dev_writeb: Error acquiring lock\n');
+        printf("onlp_sfpi_dev_writeb: Error acquiring lock\n");
     }
 
     int rv = dpapi_sfp_eeprom_writeb(id, addr, value);
@@ -297,7 +297,7 @@ int onlp_sfpi_rx_los_bitmap_get(onlp_sfp_bitmap_t* dst)
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
-        printf('onlp_sfpi_type_get[quantity_of_ports_get]: Error acquiring lock\n');
+        printf("onlp_sfpi_type_get[quantity_of_ports_get]: Error acquiring lock\n");
     }
 
     rv = dpapi_sfp_quantity_of_ports_get(&max_ports);
@@ -314,7 +314,7 @@ int onlp_sfpi_rx_los_bitmap_get(onlp_sfp_bitmap_t* dst)
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
-        printf('onlp_sfpi_rx_los_bitmap_get[los_bitmap_get]: Error acquiring lock\n');
+        printf("onlp_sfpi_rx_los_bitmap_get[los_bitmap_get]: Error acquiring lock\n");
     }
 
     rv = dpapi_sfp_rx_los_bitmap_get(pbmap);
