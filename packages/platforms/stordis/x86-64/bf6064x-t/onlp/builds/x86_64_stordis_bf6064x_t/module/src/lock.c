@@ -304,5 +304,5 @@ int bf6064x_lock_release()
 
 int bf6064x_lock_close()
 {
-
+    return 0;
 }
