@@ -212,7 +212,7 @@ onlp_sfpi_dev_readb(onlp_oid_id_t oid, int devaddr, int addr)
     uint8_t data = 0;
 
     int rv;
-    if ((rv = onlp_sfpi_dev_readb()) != SLOCK_ERROR_OK)
+    if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
         printf("onlp_sfpi_type_get: Error acquiring lock\n");
     }
