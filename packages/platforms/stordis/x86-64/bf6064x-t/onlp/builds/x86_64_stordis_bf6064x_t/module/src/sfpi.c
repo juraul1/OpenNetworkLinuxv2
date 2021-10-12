@@ -40,7 +40,7 @@ onlp_sfpi_type_get(onlp_oid_id_t oid, onlp_sfp_type_t* rtype)
     uint8_t buffer[256];
     int id = ONLP_OID_ID_GET(oid);
 
-    int rv, err = ONLP_STATUS_OK;
+    int err = ONLP_STATUS_OK;
     // if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK) {
     //     printf("onlp_sfpi_type_get: Error acquiring lock\n");
     // }
