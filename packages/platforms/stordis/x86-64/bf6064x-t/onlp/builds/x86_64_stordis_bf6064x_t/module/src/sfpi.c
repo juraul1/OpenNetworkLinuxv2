@@ -88,7 +88,7 @@ onlp_sfpi_bitmap_get(onlp_sfp_bitmap_t* bmap)
         printf("onlp_sfpi_bitmap_get: Error acquiring lock\n");
     }
 
-    int rv = dpapi_sfp_quantity_of_ports_get(&max_ports);
+    rv = dpapi_sfp_quantity_of_ports_get(&max_ports);
 
     bf6064x_lock_release();
 
@@ -122,7 +122,7 @@ onlp_sfpi_is_present(onlp_oid_id_t oid)
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
-        // ...
+        printf("onlp_sfpi_is_present: Error acquiring lock\n");
     }
 
     dpapi_sfp_is_present(id, &present);
@@ -137,7 +137,6 @@ onlp_sfpi_presence_bitmap_get(onlp_sfp_bitmap_t* dst)
 {
     uint8_t max_ports, index, *pbmap;
 
-    int rv;
 
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
@@ -157,7 +156,6 @@ onlp_sfpi_presence_bitmap_get(onlp_sfp_bitmap_t* dst)
 
     pbmap = (uint8_t *)calloc(1, sizeof(uint8_t) * max_ports);
 
-    int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
         printf("onlp_sfpi_presence_bitmap_get[presence_bitmap_get]: Error acquiring lock\n");
@@ -193,7 +191,7 @@ onlp_sfpi_dev_read(onlp_oid_id_t oid, int devaddr, int addr,
         printf("onlp_sfpi_dev_read: Error acquiring lock\n");
     }
 
-    int rv = dpapi_sfp_eeprom_read(id, dst);
+    rv = dpapi_sfp_eeprom_read(id, dst);
     
     bf6064x_lock_release();
 
@@ -219,7 +217,7 @@ onlp_sfpi_dev_readb(onlp_oid_id_t oid, int devaddr, int addr)
         printf("onlp_sfpi_type_get: Error acquiring lock\n");
     }
 
-    int rv = dpapi_sfp_eeprom_readb(id, addr, &data);
+    rv = dpapi_sfp_eeprom_readb(id, addr, &data);
     
     bf6064x_lock_release();
 
@@ -243,7 +241,7 @@ onlp_sfpi_dev_writeb(onlp_oid_id_t oid, int devaddr, int addr, uint8_t value)
         printf("onlp_sfpi_dev_writeb: Error acquiring lock\n");
     }
 
-    int rv = dpapi_sfp_eeprom_writeb(id, addr, value);
+    rv = dpapi_sfp_eeprom_writeb(id, addr, value);
 
     bf6064x_lock_release();
  
@@ -292,7 +290,6 @@ int onlp_sfpi_control_set(onlp_oid_id_t oid, onlp_sfp_control_t control, int val
 int onlp_sfpi_rx_los_bitmap_get(onlp_sfp_bitmap_t* dst)
 {
     uint8_t max_ports, index, *pbmap;
-    int rv;
 
     int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
