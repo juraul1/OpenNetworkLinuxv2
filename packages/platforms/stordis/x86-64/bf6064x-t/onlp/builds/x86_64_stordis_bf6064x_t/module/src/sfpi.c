@@ -80,6 +80,7 @@ onlp_sfpi_type_get(onlp_oid_id_t oid, onlp_sfp_type_t* rtype)
         }
         *rtype = eeprom.info.sfp_type;
     }
+    return err;
 }
 
 int
