@@ -308,7 +308,6 @@ int onlp_sfpi_rx_los_bitmap_get(onlp_sfp_bitmap_t* dst)
 
     pbmap = (uint8_t *)calloc(1, sizeof(uint8_t) * max_ports);
     
-    int rv;
     if ((rv = bf6064x_lock_acquire()) != SLOCK_ERROR_OK)
     {
         printf("onlp_sfpi_rx_los_bitmap_get[los_bitmap_get]: Error acquiring lock\n");
