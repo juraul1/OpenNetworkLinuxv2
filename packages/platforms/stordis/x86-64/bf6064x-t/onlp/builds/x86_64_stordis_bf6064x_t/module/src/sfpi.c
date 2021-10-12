@@ -60,7 +60,7 @@ onlp_sfpi_type_get(onlp_oid_id_t oid, onlp_sfp_type_t* rtype)
         {
             err = ONLP_STATUS_E_MISSING;
         }
-        else (dpapi_sfp_eeprom_read(id, buffer) != ONLP_STATUS_OK)
+        else if (dpapi_sfp_eeprom_read(id, buffer) != ONLP_STATUS_OK)
         {
             err = ONLP_STATUS_E_INVALID;
         }
