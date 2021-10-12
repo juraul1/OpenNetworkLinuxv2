@@ -273,6 +273,7 @@ int bf6064x_lock_init()
     {
         printf("Error initialising shared lock: %s\n", shared_lock_strerror(rv));
     }
+    return rv;
 }
 
 int bf6064x_lock_acquire()
@@ -285,6 +286,7 @@ int bf6064x_lock_acquire()
     {
         printf("Error acquiring shared lock: %s\n", shared_lock_strerror(rv));
     }
+    return rv;
 }
 
 int bf6064x_lock_release()
@@ -297,6 +299,7 @@ int bf6064x_lock_release()
     {
         printf("Error releasing shared lock: %s\n", shared_lock_strerror(rv));
     }
+    return rv;
 }
 
 int bf6064x_lock_close()
