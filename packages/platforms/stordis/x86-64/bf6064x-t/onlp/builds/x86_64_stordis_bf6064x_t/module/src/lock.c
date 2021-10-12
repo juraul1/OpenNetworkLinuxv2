@@ -281,7 +281,12 @@ int bf6064x_lock_acquire()
     shared_lock_t * plock = bf6064_get_lock__();
     int rv = 0;
 
-    if ((rv = shared_lock_lock(plock)) 
+    struct timespec lock_wait_for;
+    lock_wait_for.tv_sec += 5;
+    
+    clock_gettime(CLOCK_REALTIME, &lock_wait_for);
+
+    if ((rv = shared_lock_timedlock(plock, &lock_wait_for)) 
             != SLOCK_ERROR_OK)
     {
         printf("Error acquiring shared lock: %s\n", shared_lock_strerror(rv));
