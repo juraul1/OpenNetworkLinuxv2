@@ -283,7 +283,7 @@ int bf6064x_lock_acquire()
 
     struct timespec lock_wait_for;    
     clock_gettime(CLOCK_REALTIME, &lock_wait_for);
-    lock_wait_for.tv_sec += 5;
+    lock_wait_for.tv_sec += 1;
 
 
     if ((rv = shared_lock_timedlock(plock, &lock_wait_for)) 
