@@ -191,7 +191,7 @@ int shared_lock_unlock(shared_lock_t * restrict lock)
 int shared_lock_lock(shared_lock_t * restrict lock)
 {
     int rv = 0, err = SLOCK_ERROR_OK;
-    if ((rv = pthread_mutex_unlock(&lock->mutex)) != 0) {
+    if ((rv = pthread_mutex_lock(&lock->mutex)) != 0) {
         switch (rv) {
             case EAGAIN:  return SLOCK_ERROR_MUTEX_LOCK_EAGAIN;
             case EINVAL:  return SLOCK_ERROR_MUTEX_LOCK_EINVAL;
