@@ -51,9 +51,10 @@ int shared_lock_init(char const * file, shared_lock_t * restrict lock, uint8_t f
         return SLOCK_ERROR_MUTEXATTR_INIT;
     }
 
-    /* Let's allow the mutex to be cleaned up. We're not expecting the owner
-       to terminate, but since we control what this is going to be, might as
-       well anyway. Default is PTHREAD_MUTEX_STALLED. */
+    /* Prevents the mutex from being unusable if an owner terminates before
+       releasing. So let's allow the mutex to be cleaned up. We're not expecting
+       the owner to terminate, but since we control what this is going to be,
+       might as well anyway. Default is PTHREAD_MUTEX_STALLED. */
     if ((rv = pthread_mutexattr_setrobust(&mattr, PTHREAD_MUTEX_ROBUST)) != 0) {
         /* Can return EINVAL */
         return SLOCK_ERROR_MUTEXATTR_SETROBUST;
@@ -98,10 +99,10 @@ int shared_lock_timedlock(shared_lock_t * restrict lock,
 
     if ((rv = pthread_mutex_timedlock(&lock->mutex, spec)) != 0) {
        switch (rv) {
-           case ETIMEDOUT: return SLOCK_ERROR_MUTEX_LOCK_TIMEOUT; //printf("timedout!\n"); break;
-           case EINVAL:    return SLOCK_ERROR_MUTEX_LOCK_EINVAL; //printf("invalid!\n");  break;
-           case EAGAIN:    return SLOCK_ERROR_MUTEX_LOCK_EAGAIN; //printf("again!\n");    break;
-           case EDEADLK:   return SLOCK_ERROR_MUTEX_LOCK_EDEADLK; //printf("deadlock!\n"); break;
+           case ETIMEDOUT: return SLOCK_ERROR_MUTEX_LOCK_TIMEOUT;
+           case EINVAL:    return SLOCK_ERROR_MUTEX_LOCK_EINVAL;
+           case EAGAIN:    return SLOCK_ERROR_MUTEX_LOCK_EAGAIN;
+           case EDEADLK:   return SLOCK_ERROR_MUTEX_LOCK_EDEADLK;
        }
     }
 
@@ -120,7 +121,6 @@ int shared_lock_timedlock(shared_lock_t * restrict lock,
         if (current_time.tv_sec > spec->tv_sec && 
                 current_time.tv_nsec > spec->tv_nsec)
         {
-            /* some error */
             error = SLOCK_ERROR_FLOCK_TIMEOUT;
             break;
         }
@@ -130,7 +130,9 @@ int shared_lock_timedlock(shared_lock_t * restrict lock,
             break;
         }
 
-        /* Sets errno to EACCES or EAGAIN */
+        /*  errno should now be EACCES or EAGAIN. We previously tested for
+            success as we do more only on an "error". This saves precious 
+            leading whitespace :) */
 
         if (nanosleep(&wait_for, NANOSLEEP_NO_REMAINDER) == -1) {
             /* Interrupted. errno is set to EINTR */
@@ -187,17 +189,42 @@ int shared_lock_unlock(shared_lock_t * restrict lock)
     return SLOCK_ERROR_OK;
 }
 
+#define SLOCK_TRUE 1;
+#define SLOCK_FALSE 1;
 
 int shared_lock_lock(shared_lock_t * restrict lock)
 {
     int rv = 0, err = SLOCK_ERROR_OK;
-    if ((rv = pthread_mutex_lock(&lock->mutex)) != 0) {
-        switch (rv) {
-            case EAGAIN:  return SLOCK_ERROR_MUTEX_LOCK_EAGAIN;
-            case EINVAL:  return SLOCK_ERROR_MUTEX_LOCK_EINVAL;
-            case EBUSY:   return SLOCK_ERROR_MUTEX_LOCK_EBUSY;
-            case EDEADLK: return SLOCK_ERROR_MUTEX_LOCK_EDEADLK;
-            case EPERM:   return SLOCK_ERROR_MUTEX_LOCK_EPERM;
+    int try_lock = SLOCK_TRUE;
+
+    /*  Use a loop in order to not repeat code, should only ever be run twice. if
+        we didn't we'd have to do something like repeat the error conditions
+        statement again. */
+    while (try_lock) {
+        try_lock = SLOCK_FALSE;
+        if ((rv = pthread_mutex_lock(&lock->mutex)) != 0) {
+            switch (rv) {
+                case EAGAIN:     return SLOCK_ERROR_MUTEX_LOCK_EAGAIN;
+                case EINVAL:     return SLOCK_ERROR_MUTEX_LOCK_EINVAL;
+                case EBUSY:      return SLOCK_ERROR_MUTEX_LOCK_EBUSY;
+                case EDEADLK:    return SLOCK_ERROR_MUTEX_LOCK_EDEADLK;
+                case EPERM:      return SLOCK_ERROR_MUTEX_LOCK_EPERM;
+            }
+            if (rv == EOWNERDEAD) {
+                /*  This will happen if the mutex is in an inconsistent state,
+                    caused by an owner terminating before releasing the lock. 
+                    This result will happen if the mutex is set up to be robust,
+                    which we do. */
+                if ((rv == pthread_mutex_consistent(&lock->mutex)) != -1) {
+                    /* Returns EINVAL if not robust, or is not inconsistent.
+                       Do nothing for now -- hopefully EOWNERDEAD will never be
+                       returned if neither of aforementioned conditions hold
+                       true. */
+                }
+                /*  Let's try locking again. It _may_ be possible for this to 
+                    loop indefinitely. */
+                try_lock = SLOCK_TRUE;
+            } 
         }
     }
 
@@ -242,6 +269,7 @@ char const * shared_lock_strerror(int err)
         case SLOCK_ERROR_MUTEX_LOCK_EBUSY:         return "SLOCK_ERROR_MUTEX_LOCK_EBUSY";
         case SLOCK_ERROR_MUTEX_LOCK_EAGAIN:        return "SLOCK_ERROR_MUTEX_LOCK_EAGAIN";
         case SLOCK_ERROR_MUTEX_LOCK_EDEADLK:       return "SLOCK_ERROR_MUTEX_LOCK_EDEADLK";
+        case SLOCK_ERROR_MUTEX_LOCK_EOWNERDEAD:    return "SLOCK_ERROR_MUTEX_LOCK_EOWNERDEAD";
         case SLOCK_ERROR_FLOCK_TIMEOUT:            return "SLOCK_ERROR_FLOCK_TIMEOUT";
         case SLOCK_ERROR_UNLOCK_FILE_ACCESS:       return "SLOCK_ERROR_UNLOCK_FILE_ACCESS";
         case SLOCK_ERROR_UNLOCK_FILE_TRY_AGAIN:    return "SLOCK_ERROR_UNLOCK_FILE_TRY_AGAIN";
