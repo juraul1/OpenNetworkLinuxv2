@@ -10,12 +10,6 @@
 #include <time.h>      /* timespec         */
 #include <stdatomic.h> /* atomic_int       */
 
-#include <unistd.h>    /* getpid */
-#include <sys/types.h> /* getpid */
-
-#include <stdio.h>  /* itoa */
-#include <stdlib.h> /* itoa */
-
 
 #define PTHREAD_MUTEX_DEFAULTS NULL
 #define NANOSLEEP_NO_REMAINDER NULL
@@ -215,7 +209,7 @@ int shared_lock_lock(shared_lock_t * restrict lock)
                     caused by an owner terminating before releasing the lock. 
                     This result will happen if the mutex is set up to be robust,
                     which we do. */
-                if ((rv == pthread_mutex_consistent(&lock->mutex)) != -1) {
+                if ((rv = pthread_mutex_consistent(&lock->mutex)) != -1) {
                     /* Returns EINVAL if not robust, or is not inconsistent.
                        Do nothing for now -- hopefully EOWNERDEAD will never be
                        returned if neither of aforementioned conditions hold
