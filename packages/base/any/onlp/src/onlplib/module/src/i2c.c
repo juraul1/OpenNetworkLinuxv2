@@ -915,7 +915,7 @@ int set_sfp_frequency(int port_number, int frequency)
     if (rv < 0) {
             AIM_LOG_ERROR("Mapping error for port number %d", port_number); 
 	    bf6064x_lock_release();
-	    return rv;
+	    return 1;
     }
     
     uint8_t result;
@@ -924,7 +924,7 @@ int set_sfp_frequency(int port_number, int frequency)
 	    fprintf( stderr, "Error: This is not an SFP or SFP+.\n");
 	    onlp_i2c_mux_mapping(port_number, 1);
 	    bf6064x_lock_release();
-	    return -1;
+	    return 1;
     }
 
     // Change the page register on slave 0x51 to access page 2
@@ -934,7 +934,7 @@ int set_sfp_frequency(int port_number, int frequency)
             AIM_LOG_ERROR("onlp_i2c_writeb() to access page 2 failed: %d",rv);
             onlp_i2c_mux_mapping(port_number, 1);
 	    bf6064x_lock_release();
-	    return rv;
+	    return 1;
     }
 
     res = onlp_i2c_readb(0, 0x51, 0x7f,0);
@@ -942,7 +942,7 @@ int set_sfp_frequency(int port_number, int frequency)
 	    fprintf(stderr, "Error: Can not change the page, the SFP+ is not tunable.\n");
 	    onlp_i2c_mux_mapping(port_number, 1);
 	    bf6064x_lock_release();
-	    return -1;
+	    return 1;
     }
 
     // Retrieve Grid spacing value
@@ -954,7 +954,7 @@ int set_sfp_frequency(int port_number, int frequency)
             fprintf(stderr, "grid_spacing=0, page not changed.\n");
             onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
-	    return -1;
+	    return 1;
     }
 
     // Retrieve First frequency
@@ -968,14 +968,14 @@ int set_sfp_frequency(int port_number, int frequency)
             fprintf(stderr, "first_frequency=0, page not changed.\n");
             onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
-	    return -1;
+	    return 1;
     }
 
     if (frequency == 0) {
 	    fprintf(stderr, "frequency=0.\n");
 	    onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
-	    return -1;
+	    return 1;
     }
 
     // Desired channel number
@@ -988,7 +988,7 @@ int set_sfp_frequency(int port_number, int frequency)
             AIM_LOG_ERROR("onlp_i2c_writeb() for channel_number failed: %d",rv);
             onlp_i2c_mux_mapping(port_number, 1);
 	    bf6064x_lock_release();
-	    return rv;
+	    return 1;
     }
     
     // Check if it has been done correctly
@@ -998,7 +998,7 @@ int set_sfp_frequency(int port_number, int frequency)
 	    fprintf(stderr, "Error: Cannot write the desired frequency.\n");
 	    onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
-	    return -1;
+	    return 1;
     }
 
     // Put the page register back to 1
@@ -1007,7 +1007,7 @@ int set_sfp_frequency(int port_number, int frequency)
             AIM_LOG_ERROR("onlp_i2c_writeb() for page back to 0x0 failed: %d",rv);
             onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
-	    return rv;
+	    return 1;
     }
 
     onlp_i2c_mux_mapping(port_number, 1);
