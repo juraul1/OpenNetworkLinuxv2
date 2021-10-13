@@ -186,41 +186,51 @@ int shared_lock_unlock(shared_lock_t * restrict lock)
 #define SLOCK_TRUE 1;
 #define SLOCK_FALSE 1;
 
+
+
+int get_mutex_lock_error(int rv)
+{
+    switch (rv) {
+        case EAGAIN:     return SLOCK_ERROR_MUTEX_LOCK_EAGAIN;
+        case EINVAL:     return SLOCK_ERROR_MUTEX_LOCK_EINVAL;
+        case EBUSY:      return SLOCK_ERROR_MUTEX_LOCK_EBUSY;
+        case EDEADLK:    return SLOCK_ERROR_MUTEX_LOCK_EDEADLK;
+        case EPERM:      return SLOCK_ERROR_MUTEX_LOCK_EPERM;
+    }
+    return SLOCK_ERROR_MUTEX_LOCK_UNKNOWN;
+}
+
+
 int shared_lock_lock(shared_lock_t * restrict lock)
 {
-    int rv = 0, err = SLOCK_ERROR_OK;
-    int try_lock = SLOCK_TRUE;
+    int rv = 0, err = 0;
 
-    /*  Use a loop in order to not repeat code, should only ever be run twice. if
-        we didn't we'd have to do something like repeat the error conditions
-        statement again. */
-    while (try_lock) {
-        try_lock = SLOCK_FALSE;
-        if ((rv = pthread_mutex_lock(&lock->mutex)) != 0) {
-            switch (rv) {
-                case EAGAIN:     return SLOCK_ERROR_MUTEX_LOCK_EAGAIN;
-                case EINVAL:     return SLOCK_ERROR_MUTEX_LOCK_EINVAL;
-                case EBUSY:      return SLOCK_ERROR_MUTEX_LOCK_EBUSY;
-                case EDEADLK:    return SLOCK_ERROR_MUTEX_LOCK_EDEADLK;
-                case EPERM:      return SLOCK_ERROR_MUTEX_LOCK_EPERM;
-            }
-            if (rv == EOWNERDEAD) {
-                /*  This will happen if the mutex is in an inconsistent state,
-                    caused by an owner terminating before releasing the lock. 
-                    This result will happen if the mutex is set up to be robust,
-                    which we do. */
-                if ((rv = pthread_mutex_consistent(&lock->mutex)) != -1) {
-                    /* Returns EINVAL if not robust, or is not inconsistent.
-                       Do nothing for now -- hopefully EOWNERDEAD will never be
-                       returned if neither of aforementioned conditions hold
-                       true. */
-                }
-                /*  Let's try locking again. It _may_ be possible for this to 
-                    loop indefinitely. */
-                try_lock = SLOCK_TRUE;
-            } 
+    if ((rv = pthread_mutex_lock(&lock->mutex)) != 0) {
+        if (rv != 0) {
+            return get_mutex_lock_error(rv);
         }
+        if (rv == EOWNERDEAD) {
+            /*  This will happen if the mutex is in an inconsistent state,
+                caused by an owner terminating before releasing the lock. 
+                This result will happen if the mutex is set up to be robust,
+                which we do. */
+            if ((rv = pthread_mutex_consistent(&lock->mutex)) != -1) {
+                /* Returns EINVAL if not robust, or is not inconsistent.
+                    Do nothing for now -- hopefully EOWNERDEAD will never be
+                    returned if neither of aforementioned conditions hold
+                    true. */
+                if (rv == EINVAL) {
+                    return SLOCK_ERROR_MUTEX_LOCK_NOT_ROBUST_OR_INCONSISTENT;
+                }
+            }
+            if ((rv = pthread_mutex_lock(&lock->mutex)) != 0) {
+                if (rv != 0) {
+                    return get_mutex_lock_error(rv);
+                }
+            }
+        } 
     }
+
 
     lock->flock.l_type = F_WRLCK;
 
@@ -249,29 +259,31 @@ int shared_lock_lock(shared_lock_t * restrict lock)
 char const * shared_lock_strerror(int err)
 {
     switch (err) {
-        case SLOCK_ERROR_OK:                       return "SLOCK_ERROR_OK";
-        case SLOCK_ERROR_FILE:                     return "SLOCK_ERROR_FILE";
-        case SLOCK_ERROR_MUTEXATTR_INIT:           return "SLOCK_ERROR_MUTEXATTR_INIT";
-        case SLOCK_ERROR_MUTEXATTR_SETROBUST:      return "SLOCK_ERROR_MUTEXATTR_SETROBUST";
-        case SLOCK_ERROR_MUTEXATTR_SETTYPE:        return "SLOCK_ERROR_MUTEXATTR_SETTYPE";
-        case SLOCK_ERROR_MUTEX_INIT:               return "SLOCK_ERROR_MUTEX_INIT";
-        case SLOCK_ERROR_MUTEXATTR_DESTROY:        return "SLOCK_ERROR_MUTEXATTR_DESTROY";
-        case SLOCK_ERROR_MUTEX_LOCK_TIMEOUT:       return "SLOCK_ERROR_MUTEX_LOCK_TIMEOUT";
-        case SLOCK_ERROR_MUTEX_LOCK_EACCES:        return "SLOCK_ERROR_MUTEX_LOCK_EACCES";
-        case SLOCK_ERROR_MUTEX_LOCK_EPERM:         return "SLOCK_ERROR_MUTEX_LOCK_EPERM";
-        case SLOCK_ERROR_MUTEX_LOCK_EINVAL:        return "SLOCK_ERROR_MUTEX_LOCK_EINVAL";
-        case SLOCK_ERROR_MUTEX_LOCK_EBUSY:         return "SLOCK_ERROR_MUTEX_LOCK_EBUSY";
-        case SLOCK_ERROR_MUTEX_LOCK_EAGAIN:        return "SLOCK_ERROR_MUTEX_LOCK_EAGAIN";
-        case SLOCK_ERROR_MUTEX_LOCK_EDEADLK:       return "SLOCK_ERROR_MUTEX_LOCK_EDEADLK";
-        case SLOCK_ERROR_MUTEX_LOCK_EOWNERDEAD:    return "SLOCK_ERROR_MUTEX_LOCK_EOWNERDEAD";
-        case SLOCK_ERROR_FLOCK_TIMEOUT:            return "SLOCK_ERROR_FLOCK_TIMEOUT";
-        case SLOCK_ERROR_UNLOCK_FILE_ACCESS:       return "SLOCK_ERROR_UNLOCK_FILE_ACCESS";
-        case SLOCK_ERROR_UNLOCK_FILE_TRY_AGAIN:    return "SLOCK_ERROR_UNLOCK_FILE_TRY_AGAIN";
-        case SLOCK_ERROR_UNLOCK_MUTEX_PERMISSION:  return "SLOCK_ERROR_UNLOCK_MUTEX_PERMISSION";
-        case SLOCK_ERROR_UNLOCK_MUTEX_INVALID:     return "SLOCK_ERROR_UNLOCK_MUTEX_INVALID";
-        case SLOCK_ERROR_UNLOCK_MUTEX_TRY_AGAIN:   return "SLOCK_ERROR_UNLOCK_MUTEX_TRY_AGAIN";
-        case SLOCK_ERROR_UNLOCK_SLEEP_INTERRUPTED: return "SLOCK_ERROR_UNLOCK_SLEEP_INTERRUPTED";
-        case SLOCK_ERROR_DEFAULT:                  return "SLOCK_ERROR_DEFAULT";
+        case SLOCK_ERROR_OK:                                    return "SLOCK_ERROR_OK";
+        case SLOCK_ERROR_FILE:                                  return "SLOCK_ERROR_FILE";
+        case SLOCK_ERROR_MUTEXATTR_INIT:                        return "SLOCK_ERROR_MUTEXATTR_INIT";
+        case SLOCK_ERROR_MUTEXATTR_SETROBUST:                   return "SLOCK_ERROR_MUTEXATTR_SETROBUST";
+        case SLOCK_ERROR_MUTEXATTR_SETTYPE:                     return "SLOCK_ERROR_MUTEXATTR_SETTYPE";
+        case SLOCK_ERROR_MUTEX_INIT:                            return "SLOCK_ERROR_MUTEX_INIT";
+        case SLOCK_ERROR_MUTEXATTR_DESTROY:                     return "SLOCK_ERROR_MUTEXATTR_DESTROY";
+        case SLOCK_ERROR_MUTEX_LOCK_TIMEOUT:                    return "SLOCK_ERROR_MUTEX_LOCK_TIMEOUT";
+        case SLOCK_ERROR_MUTEX_LOCK_EACCES:                     return "SLOCK_ERROR_MUTEX_LOCK_EACCES";
+        case SLOCK_ERROR_MUTEX_LOCK_EPERM:                      return "SLOCK_ERROR_MUTEX_LOCK_EPERM";
+        case SLOCK_ERROR_MUTEX_LOCK_EINVAL:                     return "SLOCK_ERROR_MUTEX_LOCK_EINVAL";
+        case SLOCK_ERROR_MUTEX_LOCK_EBUSY:                      return "SLOCK_ERROR_MUTEX_LOCK_EBUSY";
+        case SLOCK_ERROR_MUTEX_LOCK_EAGAIN:                     return "SLOCK_ERROR_MUTEX_LOCK_EAGAIN";
+        case SLOCK_ERROR_MUTEX_LOCK_EDEADLK:                    return "SLOCK_ERROR_MUTEX_LOCK_EDEADLK";
+        case SLOCK_ERROR_MUTEX_LOCK_EOWNERDEAD:                 return "SLOCK_ERROR_MUTEX_LOCK_EOWNERDEAD";
+        case SLOCK_ERROR_MUTEX_LOCK_NOT_ROBUST_OR_INCONSISTENT: return "SLOCK_ERROR_MUTEX_LOCK_NOT_ROBUST_OR_INCONSISTENT";
+        case SLOCK_ERROR_MUTEX_LOCK_UNKNOWN:                    return "SLOCK_ERROR_MUTEX_LOCK_UNKNOWN";
+        case SLOCK_ERROR_FLOCK_TIMEOUT:                         return "SLOCK_ERROR_FLOCK_TIMEOUT";
+        case SLOCK_ERROR_UNLOCK_FILE_ACCESS:                    return "SLOCK_ERROR_UNLOCK_FILE_ACCESS";
+        case SLOCK_ERROR_UNLOCK_FILE_TRY_AGAIN:                 return "SLOCK_ERROR_UNLOCK_FILE_TRY_AGAIN";
+        case SLOCK_ERROR_UNLOCK_MUTEX_PERMISSION:               return "SLOCK_ERROR_UNLOCK_MUTEX_PERMISSION";
+        case SLOCK_ERROR_UNLOCK_MUTEX_INVALID:                  return "SLOCK_ERROR_UNLOCK_MUTEX_INVALID";
+        case SLOCK_ERROR_UNLOCK_MUTEX_TRY_AGAIN:                return "SLOCK_ERROR_UNLOCK_MUTEX_TRY_AGAIN";
+        case SLOCK_ERROR_UNLOCK_SLEEP_INTERRUPTED:              return "SLOCK_ERROR_UNLOCK_SLEEP_INTERRUPTED";
+        case SLOCK_ERROR_DEFAULT:                               return "SLOCK_ERROR_DEFAULT";
     }
     return "<UNKNOWN>";
 }
