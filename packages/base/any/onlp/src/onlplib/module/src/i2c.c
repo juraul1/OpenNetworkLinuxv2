@@ -948,10 +948,12 @@ int set_sfp_frequency(int port_number, int frequency)
     // Retrieve Grid spacing value
     uint16_t grid_spacing_hexa; // Need 2 bytes.
     int grid_spacing;
-    grid_spacing_hexa = ((onlp_i2c_readb(0,0x51,0x8C,0) << 8) | onlp_i2c_readb(0,0x51,0x8D,0));
+    int ra;
+    int rb;
+    grid_spacing_hexa = (((ra=onlp_i2c_readb(0,0x51,0x8C,0)) << 8) | (rb=onlp_i2c_readb(0,0x51,0x8D,0)));
     grid_spacing = grid_spacing_hexa * 0.1 * 1000000000; //value in Hz
-    AIM_LOG_VERBOSE("grid_spacing_hexa 0x%x", grid_spacing_hexa);
-    AIM_LOG_VERBOSE("grid_spacing %d", grid_spacing);
+    printf("grid_spacing_hexa 0x%x", grid_spacing_hexa);
+    printf("grid_spacing %d", grid_spacing);
     if (grid_spacing == 0) {
             fprintf(stderr, "grid_spacing=0, page not changed.\n");
             onlp_i2c_mux_mapping(port_number, 1);
@@ -967,11 +969,16 @@ int set_sfp_frequency(int port_number, int frequency)
     uint16_t first_frequency_THz;
     uint16_t first_frequency_GHz;
     int first_frequency;
-    first_frequency_THz = ((onlp_i2c_readb(0,0x51,0x84,0) << 8) | onlp_i2c_readb(0,0x51,0x85,0));
-    AIM_LOG_VERBOSE("first_frequency_THz 0x%x", first_frequency_THz);
-    first_frequency_GHz = ((onlp_i2c_readb(0,0x51,0x86,0) << 8) | onlp_i2c_readb(0,0x51,0x87,0));
-    AIM_LOG_VERBOSE("first_frequency_GHz 0x%x", first_frequency_GHz);
+    int rc;
+    int rd;
+    int re;
+    int rf;
+    first_frequency_THz = (((rc=onlp_i2c_readb(0,0x51,0x84,0)) << 8) | (rd=onlp_i2c_readb(0,0x51,0x85,0)));
+    printf("first_frequency_THz 0x%x", first_frequency_THz);
+    first_frequency_GHz = (((re=onlp_i2c_readb(0,0x51,0x86,0)) << 8) | (rf=onlp_i2c_readb(0,0x51,0x87,0)));
+    printf("first_frequency_GHz 0x%x", first_frequency_GHz);
     first_frequency = (first_frequency_THz * 1000000000000) + (first_frequency_GHz * 0.1 * 1000000000); //value in Hz
+    printf("first_frequency %d", first_frequency);
     if (first_frequency == 0) {
             fprintf(stderr, "first_frequency=0, page not changed.\n");
             onlp_i2c_mux_mapping(port_number, 1);
@@ -986,7 +993,7 @@ int set_sfp_frequency(int port_number, int frequency)
     // Desired channel number
     uint8_t channel_number;
     channel_number = 1 + ((frequency - first_frequency)/grid_spacing); // Formula from SFF-8690 document
-    AIM_LOG_VERBOSE("channel_number: %d", channel_number);
+    printf("channel_number: 0x%x", channel_number);
     // Change the channel number of the SFP
     rv = onlp_i2c_writeb(0,0x51,0x91,channel_number,0);
     if (rv < 0) {
