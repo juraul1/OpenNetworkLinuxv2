@@ -949,7 +949,7 @@ int set_sfp_frequency(int port_number, int frequency)
     uint16_t grid_spacing_hexa; // Need 2 bytes.
     int grid_spacing;
     grid_spacing_hexa = ((onlp_i2c_readb(0,0x51,0x8C,0) << 8) | onlp_i2c_readb(0,0x51,0x8D,0));
-    cout << "grid_spacing_hexa: " << +grid_spacing_hexa << ".\n";
+    cout << "grid_spacing_hexa: " << unsigned(grid_spacing_hexa) << ".\n";
     grid_spacing = grid_spacing_hexa * 0.1 * 1000000000; //value in Hz
     cout << "grid_spacing: " << grid_spacing << ".\n";
     if (grid_spacing == 0) {
@@ -964,9 +964,9 @@ int set_sfp_frequency(int port_number, int frequency)
     uint16_t first_frequency_GHz;
     int first_frequency;
     first_frequency_THz = ((onlp_i2c_readb(0,0x51,0x84,0) << 8) | onlp_i2c_readb(0,0x51,0x85,0));
-    cout << "first_frequency_Thz: " << +first_frequency_Thz << ".\n";
+    cout << "first_frequency_Thz: " << unsigned(first_frequency_Thz) << ".\n";
     first_frequency_GHz = ((onlp_i2c_readb(0,0x51,0x86,0) << 8) | onlp_i2c_readb(0,0x51,0x87,0));
-    cout << "first_frequency_Ghz: " << +first_frequency_Ghz << ".\n";
+    cout << "first_frequency_Ghz: " << unsigned(first_frequency_Ghz) << ".\n";
     first_frequency = (first_frequency_THz * 1000000000000) + (first_frequency_GHz * 0.1 * 1000000000); //value in Hz
     cout << "first_frequency: " << first_frequency << ".\n";
     if (first_frequency == 0) {
@@ -979,7 +979,7 @@ int set_sfp_frequency(int port_number, int frequency)
     // Desired channel number
     uint8_t channel_number;
     channel_number = 1 + ((frequency - first_frequency)/grid_spacing); // Formula from SFF-8690 document
-    cout << "channel_number: " << +channel_number << ".\n";
+    cout << "channel_number: " << unsigned(channel_number) << ".\n";
     // Change the channel number of the SFP
     rv = onlp_i2c_writeb(0,0x51,0x91,channel_number,0);
     if (rv < 0) {
