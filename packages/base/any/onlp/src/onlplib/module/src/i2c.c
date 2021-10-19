@@ -949,9 +949,9 @@ int set_sfp_frequency(int port_number, int frequency)
     uint16_t grid_spacing_hexa; // Need 2 bytes.
     int grid_spacing;
     grid_spacing_hexa = ((onlp_i2c_readb(0,0x51,0x8C,0) << 8) | onlp_i2c_readb(0,0x51,0x8D,0));
-    printf_P(PSTR("grid_spacing: %u"), grid_spacing_hexa);
     grid_spacing = grid_spacing_hexa * 0.1 * 1000000000; //value in Hz
-    cout << "grid_spacing: " << grid_spacing << ".\n";
+    AIM_LOG_VERBOSE("grid_spacing_hexa 0x%x", grid_spacing_hexa);
+    AIM_LOG_VERBOSE("grid_spacing %d", grid_spacing);
     if (grid_spacing == 0) {
             fprintf(stderr, "grid_spacing=0, page not changed.\n");
             onlp_i2c_mux_mapping(port_number, 1);
@@ -959,16 +959,19 @@ int set_sfp_frequency(int port_number, int frequency)
 	    return 1;
     }
 
+    if (grid_spacing != 50000000000) {
+	    fprintf(stderr, "grid_spacing != 50 Ghz.\n");
+    }
+
     // Retrieve First frequency
     uint16_t first_frequency_THz;
     uint16_t first_frequency_GHz;
     int first_frequency;
     first_frequency_THz = ((onlp_i2c_readb(0,0x51,0x84,0) << 8) | onlp_i2c_readb(0,0x51,0x85,0));
-    printf_P(PSTR("first_frequency_Thz: %u"), first_frequency_Thz);
+    AIM_LOG_VERBOSE("first_frequency_Thz 0x%x", first_frequency_Thz);
     first_frequency_GHz = ((onlp_i2c_readb(0,0x51,0x86,0) << 8) | onlp_i2c_readb(0,0x51,0x87,0));
-    printf_P(PSTR("first_frequency_Ghz: %u"), first_frequency_Ghz);
+    AIM_LOG_VERBOSE("first_frequency_Ghz 0x%x", first_frequency_Ghz);
     first_frequency = (first_frequency_THz * 1000000000000) + (first_frequency_GHz * 0.1 * 1000000000); //value in Hz
-    cout << "first_frequency: " << first_frequency << ".\n";
     if (first_frequency == 0) {
             fprintf(stderr, "first_frequency=0, page not changed.\n");
             onlp_i2c_mux_mapping(port_number, 1);
@@ -976,10 +979,14 @@ int set_sfp_frequency(int port_number, int frequency)
 	    return 1;
     }
 
+    if (first_frequency != 191100000000000) {
+            fprintf(stderr, "first_frequency != 191 100 Ghz.\n");
+    }
+
     // Desired channel number
     uint8_t channel_number;
     channel_number = 1 + ((frequency - first_frequency)/grid_spacing); // Formula from SFF-8690 document
-    printf_P(PSTR("channel_number: %u"), channel_number);
+    AIM_LOG_VERBOSE("channel_number: %d", channel_number);
     // Change the channel number of the SFP
     rv = onlp_i2c_writeb(0,0x51,0x91,channel_number,0);
     if (rv < 0) {
