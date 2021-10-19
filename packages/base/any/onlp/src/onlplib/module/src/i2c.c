@@ -968,9 +968,9 @@ int set_sfp_frequency(int port_number, int frequency)
     uint16_t first_frequency_GHz;
     int first_frequency;
     first_frequency_THz = ((onlp_i2c_readb(0,0x51,0x84,0) << 8) | onlp_i2c_readb(0,0x51,0x85,0));
-    AIM_LOG_VERBOSE("first_frequency_Thz 0x%x", first_frequency_Thz);
+    AIM_LOG_VERBOSE("first_frequency_THz 0x%x", first_frequency_THz);
     first_frequency_GHz = ((onlp_i2c_readb(0,0x51,0x86,0) << 8) | onlp_i2c_readb(0,0x51,0x87,0));
-    AIM_LOG_VERBOSE("first_frequency_Ghz 0x%x", first_frequency_Ghz);
+    AIM_LOG_VERBOSE("first_frequency_GHz 0x%x", first_frequency_GHz);
     first_frequency = (first_frequency_THz * 1000000000000) + (first_frequency_GHz * 0.1 * 1000000000); //value in Hz
     if (first_frequency == 0) {
             fprintf(stderr, "first_frequency=0, page not changed.\n");
