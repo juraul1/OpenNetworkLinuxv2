@@ -951,7 +951,7 @@ int set_sfp_frequency(int port_number, int frequency)
     int ra;
     int rb;
     grid_spacing_hexa = (((ra=onlp_i2c_readb(0,0x51,0x8C,0)) << 8) | (rb=onlp_i2c_readb(0,0x51,0x8D,0)));
-    grid_spacing = grid_spacing_hexa * 0.1 * 1000000000; //value in Hz
+    grid_spacing = grid_spacing_hexa * 0.1; //value in GHz
     printf("grid_spacing_hexa 0x%x", grid_spacing_hexa);
     printf("grid_spacing %d", grid_spacing);
     if (grid_spacing == 0) {
@@ -961,7 +961,7 @@ int set_sfp_frequency(int port_number, int frequency)
 	    return 1;
     }
 
-    if (grid_spacing != 50000000000) {
+    if (grid_spacing != 50) {
 	    fprintf(stderr, "grid_spacing != 50 Ghz.\n");
     }
 
@@ -977,7 +977,7 @@ int set_sfp_frequency(int port_number, int frequency)
     printf("first_frequency_THz 0x%x", first_frequency_THz);
     first_frequency_GHz = (((re=onlp_i2c_readb(0,0x51,0x86,0)) << 8) | (rf=onlp_i2c_readb(0,0x51,0x87,0)));
     printf("first_frequency_GHz 0x%x", first_frequency_GHz);
-    first_frequency = (first_frequency_THz * 1000000000000) + (first_frequency_GHz * 0.1 * 1000000000); //value in Hz
+    first_frequency = (first_frequency_THz * 1000) + (first_frequency_GHz * 0.1); //value in GHz
     printf("first_frequency %d", first_frequency);
     if (first_frequency == 0) {
             fprintf(stderr, "first_frequency=0, page not changed.\n");
@@ -986,7 +986,7 @@ int set_sfp_frequency(int port_number, int frequency)
 	    return 1;
     }
 
-    if (first_frequency != 191100000000000) {
+    if (first_frequency != 191100) {
             fprintf(stderr, "first_frequency != 191 100 Ghz.\n");
     }
 
