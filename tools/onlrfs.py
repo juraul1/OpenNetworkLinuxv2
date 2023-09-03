@@ -301,8 +301,8 @@ class OnlRfsContext(object):
 class OnlRfsBuilder(object):
 
     DEFAULTS = dict(
-        DEBIAN_SUITE='wheezy',
-        DEBIAN_MIRROR='mirrors.kernel.org/debian/',
+        DEBIAN_SUITE='stretch',
+        DEBIAN_MIRROR='archive.debian.org/debian/',
         APT_CACHE='127.0.0.1:3142/'
         )
 
@@ -319,6 +319,9 @@ class OnlRfsBuilder(object):
         self.kwargs.update(self.DEFAULTS)
         self.__load(config)
         self.__validate()
+
+        if arch == 'amd64':
+            self.DEFAULTS['DEBIAN_MIRROR'] = 'archive.debian.org/debian/'
 
     def __load(self, config):
         if not os.path.exists(config):

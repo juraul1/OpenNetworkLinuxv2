@@ -12,8 +12,11 @@ RUN apt-get update && apt-get install -y \
     gcc-aarch64-linux-gnu
 
 RUN dpkg --add-architecture arm64 && \
-    echo 'deb [arch=arm64] http://deb.debian.org/debian stretch main'  >>  /etc/apt/sources.list && \
-    echo 'deb [arch=arm64] http://deb.debian.org/debian stretch-updates main'  >>  /etc/apt/sources.list
+    echo 'deb http://archive.debian.org/debian stretch main'  >>  /etc/apt/sources.list && \
+    echo 'deb http://archive.debian.org/ stretch/updates main'  >>  /etc/apt/sources.list && \
+    echo 'deb [arch=arm64] http://archive.debian.org/debian stretch main'  >>  /etc/apt/sources.list && \
+    echo 'deb http://security.debian.org/debian-security stable-security/updates main'  >>  /etc/apt/sources.list
+
 RUN apt-get update && apt-get install -y \
     libssl-dev:arm64 \
     libnuma-dev:arm64 \
