@@ -895,13 +895,13 @@ onlp_i2c_mux_mapping(int port_number, int reset)
     } else {
         rv = onlp_i2c_mux_deselect(&mb_mux);
         if (rv < 0) {
-             return rv;
+            return rv;
         }
         return onlp_i2c_mux_deselect(&cpu_mux);
     }
 }
 
-int set_sfp_frequency(int port_number, int frequency) 
+int set_sfp_frequency(int port_number, int frequency)
 {
 
     int rvd;
@@ -913,115 +913,233 @@ int set_sfp_frequency(int port_number, int frequency)
     int rv;
     rv = onlp_i2c_mux_mapping(port_number, 0);
     if (rv < 0) {
-            AIM_LOG_ERROR("Mapping error for port number %d", port_number); 
+        AIM_LOG_ERROR("Mapping error for port number %d", port_number);
 	    bf6064x_lock_release();
 	    return 1;
     }
-    
+
     uint8_t result;
     result = onlp_i2c_readb(0, 0x50, 0x00, 0);
-    if (result != 0x03) {
-	    fprintf( stderr, "Error: This is not an SFP or SFP+.\n");
-	    onlp_i2c_mux_mapping(port_number, 1);
-	    bf6064x_lock_release();
-	    return 1;
-    }
+    if (result == 0x03) { //this block is for SFP+ and SFP28 tunable management
 
-    // Change the page register on slave 0x51 to access page 2
-    uint8_t res;
-    rv = onlp_i2c_writeb(0,0x51,0x7f,0x2,0);
-    if (rv < 0) {
+        // Change the page register on slave 0x51 to access page 2
+        uint8_t res;
+        rv = onlp_i2c_writeb(0,0x51,0x7f,0x2,0);
+        if (rv < 0) {
             AIM_LOG_ERROR("onlp_i2c_writeb() to access page 2 failed: %d",rv);
             onlp_i2c_mux_mapping(port_number, 1);
-	    bf6064x_lock_release();
-	    return 1;
-    }
+            bf6064x_lock_release();
+            return 1;
+        }
 
-    res = onlp_i2c_readb(0, 0x51, 0x7f,0);
-    if (res != 0x02) {
-	    fprintf(stderr, "Error: Can not change the page, the SFP+ is not tunable.\n");
-	    onlp_i2c_mux_mapping(port_number, 1);
-	    bf6064x_lock_release();
-	    return 1;
-    }
+        res = onlp_i2c_readb(0, 0x51, 0x7f,0);
+        if (res != 0x02) {
+            fprintf(stderr, "Error: Can not change the page, the SFP+ is not tunable.\n");
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
 
-    // Retrieve Grid spacing value
-    uint16_t grid_spacing_hexa; // Need 2 bytes.
-    int grid_spacing;
-    int ra;
-    int rb;
-    grid_spacing_hexa = (((ra=onlp_i2c_readb(0,0x51,0x8C,0)) << 8) | (rb=onlp_i2c_readb(0,0x51,0x8D,0)));
-    grid_spacing = grid_spacing_hexa * 0.1; //value in GHz
-    printf("grid_spacing_hexa 0x%x", grid_spacing_hexa);
-    printf("grid_spacing %d", grid_spacing);
-    if (grid_spacing == 0) {
+        // Retrieve Grid spacing value
+        uint16_t grid_spacing_hexa; // Need 2 bytes.
+        int grid_spacing;
+        int ra;
+        int rb;
+        grid_spacing_hexa = (((ra=onlp_i2c_readb(0,0x51,0x8C,0)) << 8) | (rb=onlp_i2c_readb(0,0x51,0x8D,0)));
+        grid_spacing = grid_spacing_hexa * 0.1; //value in GHz
+        printf("grid_spacing_hexa 0x%x", grid_spacing_hexa);
+        printf("grid_spacing %d", grid_spacing);
+        if (grid_spacing == 0) {
             fprintf(stderr, "grid_spacing=0, page not changed.\n");
             onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
-	    return 1;
-    }
+            return 1;
+        }
 
-    if (grid_spacing != 50) {
-	    fprintf(stderr, "grid_spacing != 50 Ghz.\n");
-    }
+        if (grid_spacing != 50) {
+            fprintf(stderr, "grid_spacing != 50 Ghz.\n");
+        }
 
-    // Retrieve First frequency
-    uint16_t first_frequency_THz;
-    uint16_t first_frequency_GHz;
-    int first_frequency;
-    int rc;
-    int rd;
-    int re;
-    int rf;
-    first_frequency_THz = (((rc=onlp_i2c_readb(0,0x51,0x84,0)) << 8) | (rd=onlp_i2c_readb(0,0x51,0x85,0)));
-    printf("first_frequency_THz 0x%x", first_frequency_THz);
-    first_frequency_GHz = (((re=onlp_i2c_readb(0,0x51,0x86,0)) << 8) | (rf=onlp_i2c_readb(0,0x51,0x87,0)));
-    printf("first_frequency_GHz 0x%x", first_frequency_GHz);
-    first_frequency = (first_frequency_THz * 1000) + (first_frequency_GHz * 0.1); //value in GHz
-    printf("first_frequency %d", first_frequency);
-    if (first_frequency == 0) {
+        // Retrieve First frequency
+        uint16_t first_frequency_THz;
+        uint16_t first_frequency_GHz;
+        int first_frequency;
+        int rc;
+        int rd;
+        int re;
+        int rf;
+        first_frequency_THz = (((rc=onlp_i2c_readb(0,0x51,0x84,0)) << 8) | (rd=onlp_i2c_readb(0,0x51,0x85,0)));
+        printf("first_frequency_THz 0x%x", first_frequency_THz);
+        first_frequency_GHz = (((re=onlp_i2c_readb(0,0x51,0x86,0)) << 8) | (rf=onlp_i2c_readb(0,0x51,0x87,0)));
+        printf("first_frequency_GHz 0x%x", first_frequency_GHz);
+        first_frequency = (first_frequency_THz * 1000) + (first_frequency_GHz * 0.1); //value in GHz
+        printf("first_frequency %d", first_frequency);
+        if (first_frequency == 0) {
             fprintf(stderr, "first_frequency=0, page not changed.\n");
             onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
-	    return 1;
-    }
+            return 1;
+        }
 
-    if (first_frequency != 191100) {
+        if (first_frequency != 191100) { //this does not interrupt the program. SFP28 have different first frequency.
             fprintf(stderr, "first_frequency != 191 100 Ghz.\n");
-    }
+        }
 
-    // Desired channel number
-    uint8_t channel_number;
-    channel_number = 1 + ((frequency - first_frequency)/grid_spacing); // Formula from SFF-8690 document
-    printf("channel_number: 0x%x", channel_number);
-    // Change the channel number of the SFP
-    rv = onlp_i2c_writeb(0,0x51,0x91,channel_number,0);
-    if (rv < 0) {
+        // Desired channel number
+        uint8_t channel_number;
+        channel_number = 1 + ((frequency - first_frequency)/grid_spacing); // Formula from SFF-8690 document
+        printf("channel_number: 0x%x", channel_number);
+        // Change the channel number of the SFP
+        rv = onlp_i2c_writeb(0,0x51,0x91,channel_number,0);
+        if (rv < 0) {
             AIM_LOG_ERROR("onlp_i2c_writeb() for channel_number failed: %d",rv);
             onlp_i2c_mux_mapping(port_number, 1);
-	    bf6064x_lock_release();
-	    return 1;
-    }
-    
-    // Check if it has been done correctly
-    uint8_t resu;
-    resu = onlp_i2c_readb(0,0x51,0x91,0);
-    if (resu != channel_number) {
-	    fprintf(stderr, "Error: Cannot write the desired frequency.\n");
-	    onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
-	    return 1;
-    }
+            return 1;
+        }
 
-    // Put the page register back to 0
-    rv = onlp_i2c_writeb(0,0x51,0x7f,0x00,0);
-    if (rv < 0) {
+        // Check if it has been done correctly
+        uint8_t resu;
+        resu = onlp_i2c_readb(0,0x50,0x88,0);
+        if (resu != channel_number) {
+            fprintf(stderr, "Error: Cannot write the desired frequency.\n");
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
+
+        // Put the page register back to 0
+        rv = onlp_i2c_writeb(0,0x50,0x7f,0x00,0);
+        if (rv < 0) {
             AIM_LOG_ERROR("onlp_i2c_writeb() for page back to 0x0 failed: %d",rv);
             onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
-	    return 1;
-    }
+            return 1;
+        }
+    } else if (result == 0x1e) { // this block is for 100ZR. To be confirmed if 0x1e.
+        // Change the page register on slave 0x51 to access page 2
+        uint8_t res;
 
+        //Set bank to 0
+        rv = onlp_i2c_writeb(0,0x50,0x7e,0x00,0);
+        if (rv < 0) {
+            AIM_LOG_ERROR("onlp_i2c_writeb() to set bank to 0 failed: %d",rv);
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
+        // set page to 1 to check if Tx is tunable
+        rv = onlp_i2c_writeb(0,0x50,0x7f,0x01,0);
+        if (rv < 0) {
+            AIM_LOG_ERROR("onlp_i2c_writeb() to set page to 1 failed: %d",rv);
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
+        //Is the pluggable tunable?
+        res = (onlp_i2c_readb(0,0x50,0x9b,0) & (1 << 6));
+        if (res == 0) {
+            fprintf(stderr, "QSFP28 is not tunable.\n");
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
+
+        // First frequency = 193.1 THz
+        int first_frequency;
+        first_frequency = 193100; //value in GHz
+
+        // Check lower/higher number of n - page 4
+        rv = onlp_i2c_writeb(0,0x50,0x7f,0x4,0);
+        if (rv < 0) {
+            AIM_LOG_ERROR("onlp_i2c_writeb() to set page to 4h failed: %d",rv);
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
+
+        uint16_t highest_n_hexa;
+        uint16_t lowest_n_hexa;
+        int highest_n;
+        int highest_n;
+        int rc;
+        int rd;
+        int re;
+        int rf;
+        lowest_n_hexa = (((rc=onlp_i2c_readb(0,0x50,0x86,0)) << 8) | (rd=onlp_i2c_readb(0,0x50,0x87,0)));
+        printf("lowest_n_hexa for 6.25 GHz spacing 0x%x", lowest_n_hexa);
+        highest_n_hexa = (((re=onlp_i2c_readb(0,0x50,0x88,0)) << 8) | (rf=onlp_i2c_readb(0,0x50,0x89,0)));
+        printf("highest_n_hexa for 6.25 GHz spacing 0x%x", highest_n_hexa);
+        highest_n = highest_n_hexa * 1;
+        lowest_n = lowest_n_hexa * 1;
+        printf("lowest_n for 6.25 GHz spacing %d", lowest_n);
+        printf("highest_n for 6.25 GHz spacing %d", highest_n);
+
+        // Setting Grid spacing value to 6,25GHz
+        //page to 12
+        rv = onlp_i2c_writeb(0,0x50,0x7f,0x12,0);
+        if (rv < 0) {
+            AIM_LOG_ERROR("onlp_i2c_writeb() to set page to 12h failed: %d",rv);
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
+        uint8_t grid_spacing_hexa;
+        grid_spacing_hexa = ((onlp_i2c_readb(0,0x50,0x80,0) & 0xF) | 0x10);
+        rv = onlp_i2c_writeb(0,0x50,0x80,grid_spacing_hexa,0);
+        printf("grid_spacing_hexa 0x%x", grid_spacing_hexa);
+        if (rv < 0) {
+            AIM_LOG_ERROR("onlp_i2c_writeb() settign grid spacing to 6.25 GHz failed: %d",rv);
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
+
+        // Desired channel number
+        uint8_t channel_number;
+        channel_number = ((frequency - first_frequency)/0.00625); // Formula from CMIS document
+        printf("channel_number: 0x%x", channel_number);
+        // Change the channel number of the SFP
+        if (channel_number < highest_n) {
+            rv = onlp_i2c_writeb(0,0x50,0x88,channel_number,0);
+                if (rv < 0) {
+                    AIM_LOG_ERROR("onlp_i2c_writeb() for channel_number failed: %d",rv);
+                    onlp_i2c_mux_mapping(port_number, 1);
+                    bf6064x_lock_release();
+                    return 1;
+                }
+        } else {
+            AIM_LOG_ERROR("onlp_i2c_writeb() settign grid spacing to 6.25 GHz failed: %d",rv);
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
+
+        // Check if it has been done correctly
+        uint8_t resu;
+        resu = onlp_i2c_readb(0,0x51,0x91,0);
+        if (resu != channel_number) {
+            fprintf(stderr, "Error: Cannot write the desired frequency.\n");
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
+
+        // Put the page register back to 0
+        rv = onlp_i2c_writeb(0,0x51,0x7f,0x00,0);
+        if (rv < 0) {
+            AIM_LOG_ERROR("onlp_i2c_writeb() for page back to 0x0 failed: %d",rv);
+            onlp_i2c_mux_mapping(port_number, 1);
+            bf6064x_lock_release();
+            return 1;
+        }
+
+    } else {
+        fprintf( stderr, "Unkown type. Not SFP/SFP+/SFP28/QSFP28.\n");
+        onlp_i2c_mux_mapping(port_number, 1);
+        bf6064x_lock_release();
+        return 1;
+    }
     onlp_i2c_mux_mapping(port_number, 1);
 
     bf6064x_lock_release();
