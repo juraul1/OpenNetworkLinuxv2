@@ -1063,7 +1063,7 @@ int set_sfp_frequency(int port_number, int frequency)
         uint16_t highest_n_hexa;
         uint16_t lowest_n_hexa;
         int highest_n;
-        int highest_n;
+        int lowest_n;
         int rc;
         int rd;
         int re;
