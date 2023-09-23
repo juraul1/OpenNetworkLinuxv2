@@ -956,9 +956,12 @@ int set_sfp_frequency(int port_number, int frequency)
             return 1;
         }
 
-        if (grid_spacing != 50) {
-            fprintf(stderr, "grid_spacing != 50 Ghz.\n");
-        }
+        //if (grid_spacing == 50) {
+        //    fprintf(stderr, "grid_spacing = 50 Ghz.\n");
+        //}
+        //if (grid_spacing == 100) {
+        //            fprintf(stderr, "grid_spacing = 100 Ghz.\n");
+        //}
 
         // Retrieve First frequency
         uint16_t first_frequency_THz;
@@ -981,9 +984,9 @@ int set_sfp_frequency(int port_number, int frequency)
             return 1;
         }
 
-        if (first_frequency != 191100) { //this does not interrupt the program. SFP28 have different first frequency.
-            fprintf(stderr, "first_frequency != 191 100 Ghz.\n");
-        }
+        //if (first_frequency == 191100) { //this does not interrupt the program. SFP28 have different first frequency.
+        //    fprintf(stderr, "first_frequency = 191 100 Ghz.\n");
+        //}
 
         // Desired channel number
         uint8_t channel_number;
@@ -1017,7 +1020,6 @@ int set_sfp_frequency(int port_number, int frequency)
             return 1;
         }
     } else if (result == 0x1e) { // this block is for 100ZR. To be confirmed if 0x1e.
-        // Change the page register on slave 0x51 to access page 2
         uint8_t res;
 
         //Set bank to 0
@@ -1109,7 +1111,7 @@ int set_sfp_frequency(int port_number, int frequency)
                     return 1;
                 }
         } else {
-            AIM_LOG_ERROR("onlp_i2c_writeb() settign grid spacing to 6.25 GHz failed: %d",rv);
+            AIM_LOG_ERROR("onlp_i2c_writeb() setting grid spacing to 6.25 GHz failed: %d",rv);
             onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
             return 1;
@@ -1117,7 +1119,7 @@ int set_sfp_frequency(int port_number, int frequency)
 
         // Check if it has been done correctly
         uint8_t resu;
-        resu = onlp_i2c_readb(0,0x51,0x91,0);
+        resu = onlp_i2c_readb(0,0x50,0x88,0);
         if (resu != channel_number) {
             fprintf(stderr, "Error: Cannot write the desired frequency.\n");
             onlp_i2c_mux_mapping(port_number, 1);
@@ -1126,14 +1128,13 @@ int set_sfp_frequency(int port_number, int frequency)
         }
 
         // Put the page register back to 0
-        rv = onlp_i2c_writeb(0,0x51,0x7f,0x00,0);
+        rv = onlp_i2c_writeb(0,0x50,0x7f,0x00,0);
         if (rv < 0) {
             AIM_LOG_ERROR("onlp_i2c_writeb() for page back to 0x0 failed: %d",rv);
             onlp_i2c_mux_mapping(port_number, 1);
             bf6064x_lock_release();
             return 1;
         }
-
     } else {
         fprintf( stderr, "Unkown type. Not SFP/SFP+/SFP28/QSFP28.\n");
         onlp_i2c_mux_mapping(port_number, 1);
